@@ -1,16 +1,21 @@
 import expess, { type Request, type Response } from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+
+// Modules
+import { config } from "./config/env/env.Config.ts";
 
 const app = expess();
 
-const PORT = process.env.PORT || 5000;
-
 app.use(expess.json());
 app.use(expess.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(cors());
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("API is running...");
+  res.send("Server codemind is running");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(config.PORT, () => {
+  console.log(`Server codemind is running on port ${config.PORT}`);
 });
