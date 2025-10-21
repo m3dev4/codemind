@@ -1,0 +1,7 @@
+{
+  "semi": true,
+  "trailingComma": "all",
+  "doubleQuote": true,
+  "printWidth": 100,
+  "tabWidth": 2
+}
