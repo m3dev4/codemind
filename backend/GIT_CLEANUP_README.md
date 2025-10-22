@@ -4,16 +4,20 @@
 
 Les fichiers suivants sont maintenant ignorés par Git :
 
-### 1. **Fichiers Prisma Générés** 
+### 1. **Fichiers Prisma Générés**
+
 ```
 src/lib/generated/prisma/**
 ```
+
 **Raison** : Ces fichiers sont générés automatiquement par `prisma generate` et ne doivent jamais être versionnés.
 
 ### 2. **Configuration d'Environnement**
+
 ```
 src/config/env/env.Config.ts
 ```
+
 **Raison** : Peut contenir des secrets et des clés API. Un fichier `.example` est fourni pour documentation.
 
 ---
@@ -51,17 +55,20 @@ git push
 ## 📦 Configuration pour Nouveaux Développeurs
 
 ### 1. Cloner le projet
+
 ```bash
 git clone <repo-url>
 cd backend
 ```
 
 ### 2. Installer les dépendances
+
 ```bash
 npm install
 ```
 
 ### 3. Configurer l'environnement
+
 ```bash
 # Copier le fichier exemple
 cp .env.example .env
@@ -75,11 +82,13 @@ code src/config/env/env.Config.ts
 ```
 
 ### 4. Générer le client Prisma
+
 ```bash
 npx prisma generate
 ```
 
 ### 5. Migrer la base de données
+
 ```bash
 npx prisma migrate dev
 ```
@@ -97,6 +106,7 @@ openssl rand -base64 32
 ```
 
 Ajoutez ces valeurs dans votre `.env` :
+
 ```
 JWT_SECRET_KEY=<généré_ci-dessus>
 JWT_REFRESH_SECRET=<généré_ci-dessus>
@@ -107,12 +117,14 @@ JWT_REFRESH_SECRET=<généré_ci-dessus>
 ## ⚠️ Important
 
 ### ✅ À FAIRE
+
 - ✅ Commiter `.gitignore` mis à jour
 - ✅ Commiter `.env.example`
 - ✅ Commiter `env.Config.example.ts`
 - ✅ Documenter les variables d'environnement nécessaires
 
 ### ❌ À NE JAMAIS FAIRE
+
 - ❌ Commiter `.env`
 - ❌ Commiter `env.Config.ts`
 - ❌ Commiter `src/lib/generated/prisma/**`
@@ -124,11 +136,13 @@ JWT_REFRESH_SECRET=<généré_ci-dessus>
 ## 🔄 Workflow Git Amélioré
 
 ### Vérifier les fichiers avant commit
+
 ```bash
 git status
 ```
 
 ### Si des fichiers générés apparaissent
+
 ```bash
 # Vérifier le .gitignore
 cat .gitignore | grep -E "(prisma|env)"

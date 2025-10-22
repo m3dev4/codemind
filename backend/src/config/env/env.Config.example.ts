@@ -5,8 +5,8 @@ dotenv.config();
 
 /**
  * Configuration de l'application
- * 
- * IMPORTANT: Ce fichier est un exemple. 
+ *
+ * IMPORTANT: Ce fichier est un exemple.
  * Créez votre propre env.Config.ts avec vos vraies valeurs.
  * Le fichier env.Config.ts est ignoré par Git pour des raisons de sécurité.
  */

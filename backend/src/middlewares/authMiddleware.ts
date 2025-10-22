@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { randomUUID } from "crypto";
-import prisma from "../lib/prisma.js";
+import prisma from "../lib/prisma.ts";
 import asyncHandlerMiddleware from "./asyncHandlerMiddleware.ts";
 import { config } from "../config/env/env.Config.ts";
 
@@ -199,5 +199,4 @@ const isAdmin = asyncHandlerMiddleware(async (req: Request, res: Response, next:
   }
 });
 
-
-export { isAuthenticated, isAdmin }
+export { isAuthenticated, isAdmin };
