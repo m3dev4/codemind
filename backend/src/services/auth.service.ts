@@ -30,6 +30,14 @@ interface LoginData {
   password: string;
 }
 
+interface UpdateUserByIdData {
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+}
+
 /**
  * Service: Créer un nouvel utilisateur (sans token JWT tant que l'email n'est pas vérifié)
  */
@@ -333,3 +341,113 @@ export const getMyProfile = async (userId: string) => {
 
   return user;
 };
+
+/******  Admin Services  ********* */
+
+/**
+ * Service: Obtenir tous les utilisateurs
+ */
+
+export const getAllUsers = async () => {
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      username: true,
+      role: true,
+      emailVerified: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  if (!users) {
+    throw new Error("Aucun utilisateur trouvé");
+  }
+
+  return users;
+};
+
+/**
+ * Service: Obtenir un utilisateur par son ID
+ */
+
+export const getUserById = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      username: true,
+      role: true,
+      emailVerified: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  if (!user) {
+    throw new Error("Utilisateur non trouvé");
+  }
+
+  return user;
+};
+
+/**
+ * Service: Mettre à jour un utilisateur
+ */
+
+export const updateUserById = async (userId: string, data: UpdateUserByIdData) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      username: true,
+      role: true,
+      emailVerified: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  if (!user) {
+    throw new Error("Utilisateur non trouvé");
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      ...data,
+    },
+  });
+
+  return updatedUser;
+};
+
+
+/**
+ * Service: Supprimer un utilisateur
+ */
+export const deleteUserById = async (userId: string) => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+    })
+
+    if (!user) {
+        throw new Error("Utilisateur non trouvé");
+    }
+
+    await prisma.user.delete({
+        where: { id: userId },
+    })
+
+    return { message: "Utilisateur supprimé avec succès" };
+}
+

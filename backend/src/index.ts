@@ -3,12 +3,14 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
+import passport from "passport";
 
 // Modules
 import { config } from "./config/env/env.Config.ts";
 import { connectRedis } from "./config/cache/redis.ts";
 import routes from "./routes/index.ts";
 import { testEmailConnection } from "./services/email.service.ts";
+import "./config/Oauth2/passport.ts"; // Initialiser passport
 
 const app = express();
 
@@ -31,6 +33,9 @@ app.use(
 
 // Logging
 app.use(morgan(config.NODE_ENV === "development" ? "dev" : "combined"));
+
+// Initialiser Passport
+app.use(passport.initialize());
 
 // Connexion Redis
 await connectRedis();

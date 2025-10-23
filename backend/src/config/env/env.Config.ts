@@ -18,6 +18,10 @@ const appConfig = () => {
     JWT_REFRESH_SECRET: getEnv("JWT_REFRESH_SECRET", ""),
     JWT_ACCESS_EXPIRY: getEnv("JWT_ACCESS_EXPIRY", ""),
     JWT_REFRESH_EXPIRY: getEnv("JWT_REFRESH_EXPIRY", ""),
+    NEXT_CLIENT: getEnv("NEXT_CLIENT", ""),
+    GOOGLE_CALLBACK_URL: getEnv("GOOGLE_CALLBACK_URL", ""),
+    GOOGLE_ID_CLIENT: getEnv("GOOGLE_ID_CLIENT", ""),
+    GOOGLE_KEY_SECRET: getEnv("GOOGLE_KEY_SECRET", ""),
   };
 };
 

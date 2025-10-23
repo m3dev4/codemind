@@ -17,5 +17,7 @@ export type User = {
   createdAt: Date;
   updatedAt: Date;
   role: Role;
+  googleId: string | null;
+  picture: string | null;
   sessions: Session[];
 };
