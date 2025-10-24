@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 import prisma from "../lib/prisma.ts";
 import asyncHandlerMiddleware from "./asyncHandlerMiddleware.ts";
 import { config } from "../config/env/env.Config.ts";
+import { isTokenBlacklisted, getUserFromCache, cacheUser } from "../services/redis.auth.service.ts";
 
 interface JwtPayload {
   userId: string;
@@ -32,23 +33,34 @@ const verifyToken = async (token: string, jwtSecret: string): Promise<JwtPayload
       throw new Error("Invalid token: missing userId");
     }
 
-    // Vérifier l'existence de l'utilisateur
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      select: { id: true },
-    });
-
-    if (!user) {
-      throw new Error("User not found");
+    // Vérifier si le token est blacklisté (révoqué) dans Redis
+    const isBlacklisted = await isTokenBlacklisted(decoded.jti);
+    if (isBlacklisted) {
+      throw new Error("Token has been revoked");
     }
 
-    // TODO: Vérifier si le token est blacklisté (token revocation)
-    // const isBlacklisted = await prisma.tokenBlacklist.findUnique({
-    //   where: { jti: decoded.jti }
-    // });
-    // if (isBlacklisted) {
-    //   throw new Error("Token has been revoked");
-    // }
+    // Vérifier l'existence de l'utilisateur (avec cache Redis)
+    let user = await getUserFromCache(decoded.userId);
+    
+    if (!user) {
+      // Si pas en cache, chercher dans la DB et mettre en cache
+      user = await prisma.user.findUnique({
+        where: { id: decoded.userId },
+        select: { 
+          id: true, 
+          email: true, 
+          role: true,
+          emailVerified: true 
+        },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      // Mettre l'utilisateur en cache pour 1h
+      await cacheUser(decoded.userId, user);
+    }
 
     return decoded;
   } catch (error) {

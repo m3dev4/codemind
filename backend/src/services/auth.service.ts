@@ -16,6 +16,20 @@ import {
 } from "./email.service.ts";
 import type { Request } from "express";
 import { extractDeviceInfo } from "../utils/deviceInfo.ts";
+import {
+  storeVerificationCode,
+  verifyVerificationCode,
+  storeResetToken,
+  getEmailFromResetToken,
+  deleteResetToken,
+  cacheSession,
+  deleteSessionFromCache,
+  deleteAllUserSessions,
+  blacklistToken,
+  invalidateUserCache,
+  cacheUser,
+  getUserFromCache,
+} from "./redis.auth.service.ts";
 
 interface RegisterData {
   email: string;
@@ -63,7 +77,9 @@ export const registerUser = async (data: RegisterData) => {
 
   // Générer le code de vérification
   const verificationCode = generateVerificationCode();
-  const verificationExpiry = getVerificationExpiry();
+
+  // Stocker le code de vérification dans Redis (TTL: 15 min)
+  await storeVerificationCode(email, verificationCode);
 
   // Créer l'utilisateur (emailVerified = false par défaut)
   const user = await prisma.user.create({
@@ -73,9 +89,8 @@ export const registerUser = async (data: RegisterData) => {
       firstName,
       lastName,
       username,
-      emailVerificationToken: verificationCode,
-      emailVerificationExpires: verificationExpiry.toISOString(),
       emailVerified: false,
+      // Ne plus stocker le code en DB
     },
     select: {
       id: true,
@@ -113,21 +128,18 @@ export const verifyEmail = async (email: string, code: string) => {
     throw new Error("Email déjà vérifié");
   }
 
-  if (user.emailVerificationToken !== code) {
-    throw new Error("Code de vérification invalide");
+  // Vérifier le code depuis Redis (auto-suppression après vérification)
+  const isValid = await verifyVerificationCode(email, code);
+  
+  if (!isValid) {
+    throw new Error("Code de vérification invalide ou expiré");
   }
 
-  if (!user.emailVerificationExpires || isTokenExpired(user.emailVerificationExpires)) {
-    throw new Error("Code de vérification expiré");
-  }
-
-  // Marquer l'email comme vérifié et supprimer le code
+  // Marquer l'email comme vérifié
   const updatedUser = await prisma.user.update({
     where: { email },
     data: {
       emailVerified: true,
-      emailVerificationToken: null,
-      emailVerificationExpires: null,
     },
     select: {
       id: true,
@@ -195,8 +207,24 @@ export const loginUser = async (data: LoginData, req: Request) => {
     },
   });
 
+  // Mettre la session en cache Redis (7 jours)
+  await cacheSession(session.id, {
+    id: session.id,
+    userId: user.id,
+    device: deviceInfo.device,
+    expiresAt: session.expiresAt,
+  });
+
   // Générer les tokens JWT
   const tokens = generateTokenPair(user.id, user.email, user.role);
+
+  // Mettre l'utilisateur en cache Redis (1 heure)
+  await cacheUser(user.id, {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    emailVerified: user.emailVerified,
+  });
 
   return {
     user: {
@@ -216,20 +244,43 @@ export const loginUser = async (data: LoginData, req: Request) => {
 };
 
 /**
- * Service: Déconnexion utilisateur (supprimer la session)
+ * Service: Déconnexion utilisateur (supprimer la session + blacklist tokens)
+ * @param userId - ID de l'utilisateur
+ * @param sessionId - ID de session spécifique (optionnel)
+ * @param tokenJti - JTI du token à blacklister (optionnel)
+ * @param tokenExpiresIn - Durée avant expiration du token en secondes (optionnel)
  */
-export const logoutUser = async (userId: string, sessionId?: string) => {
-  if (sessionId) {
-    // Supprimer une session spécifique
-    await prisma.session.delete({
-      where: { id: sessionId, userId },
-    });
-  } else {
-    // Supprimer toutes les sessions de l'utilisateur
-    await prisma.session.deleteMany({
-      where: { userId },
-    });
+export const logoutUser = async (
+  userId: string,
+  sessionId?: string,
+  tokenJti?: string,
+  tokenExpiresIn?: number
+) => {
+  // Blacklister le token JWT si fourni
+  if (tokenJti && tokenExpiresIn) {
+    await blacklistToken(tokenJti, tokenExpiresIn);
   }
+
+  if (sessionId) {
+    // Supprimer une session spécifique de la DB et du cache
+    await Promise.all([
+      prisma.session.delete({
+        where: { id: sessionId, userId },
+      }),
+      deleteSessionFromCache(sessionId),
+    ]);
+  } else {
+    // Supprimer toutes les sessions de l'utilisateur (DB + cache)
+    await Promise.all([
+      prisma.session.deleteMany({
+        where: { userId },
+      }),
+      deleteAllUserSessions(userId),
+    ]);
+  }
+
+  // Invalider le cache utilisateur
+  await invalidateUserCache(userId);
 
   return { message: "Déconnexion réussie" };
 };
@@ -307,6 +358,33 @@ export const resetPassword = async (token: string, newPassword: string) => {
  * Service: Obtenir le profil de l'utilisateur connecté
  */
 export const getMyProfile = async (userId: string) => {
+  // Essayer de récupérer depuis le cache Redis d'abord
+  let cachedUser = await getUserFromCache(userId);
+
+  if (cachedUser) {
+    // Si en cache, récupérer seulement les sessions depuis la DB
+    const sessions = await prisma.session.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        device: true,
+        browser: true,
+        os: true,
+        location: true,
+        ip: true,
+        createdAt: true,
+        expiresAt: true,
+      },
+    });
+
+    return {
+      ...cachedUser,
+      sessions,
+    };
+  }
+
+  // Sinon, récupérer depuis la DB et mettre en cache
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
@@ -338,6 +416,20 @@ export const getMyProfile = async (userId: string) => {
   if (!user) {
     throw new Error("Utilisateur non trouvé");
   }
+
+  // Mettre les données de base en cache (sans les sessions car elles changent souvent)
+  const userDataForCache = {
+    id: user.id,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    username: user.username,
+    role: user.role,
+    emailVerified: user.emailVerified,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
+  await cacheUser(userId, userDataForCache);
 
   return user;
 };

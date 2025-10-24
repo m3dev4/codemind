@@ -103,6 +103,8 @@ const logout = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
     const sessionId = req.body.sessionId; // Optionnel: pour déconnecter une session spécifique
+    const tokenJti = req.user?.jti; // JTI du token JWT
+    const tokenExp = req.user?.exp; // Expiration du token
 
     if (!userId) {
       return res.status(401).json({
@@ -111,7 +113,10 @@ const logout = async (req: Request, res: Response) => {
       });
     }
 
-    await authService.logoutUser(userId, sessionId);
+    // Calculer le temps restant avant expiration du token (pour le TTL Redis)
+    const tokenExpiresIn = tokenExp ? tokenExp - Math.floor(Date.now() / 1000) : 900; // Par défaut 15 min
+
+    await authService.logoutUser(userId, sessionId, tokenJti, tokenExpiresIn);
 
     // Supprimer les cookies
     res.clearCookie("jwt");
