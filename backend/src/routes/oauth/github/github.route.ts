@@ -8,18 +8,18 @@ import prisma from "../../../lib/prisma.ts";
 const router: Router = Router();
 
 /**
- * @route   GET /api/oauth/googleClient/google
+ * @route   GET /api/oauth/githubClient/github
  * @desc    Initier l'authentification Google OAuth
  * @access  Public
  */
 router.get(
-  "/google",
+  "/github",
   (req, res, next) => {
-    console.log("🔑 Client ID:", config.GOOGLE_ID_CLIENT?.substring(0, 20) + "...");
-    console.log("🔑 Client Secret exists:", !!config.GOOGLE_KEY_SECRET);
+    console.log("🔑 Client ID:", config.GITHUB_ID_CLIENT?.substring(0, 20) + "...");
+    console.log("🔑 Client Secret exists:", !!config.GITHUB_SECRET_KEY);
     next();
   },
-  passport.authenticate("google", {
+  passport.authenticate("github", {
     
     scope: ["profile", "email"],
     session: false,
@@ -27,13 +27,13 @@ router.get(
 );
 
 /**
- * @route   GET /api/oauth/googleClient/google/callback
+ * @route   GET /api/oauth/githubClient/github/callback
  * @desc    Callback après authentification Google
  * @access  Public
  */
 router.get(
-  "/google/callback",
-  passport.authenticate("google", {
+  "/github/callback",
+  passport.authenticate("github", {
     failureRedirect: `${config.NEXT_CLIENT}/login?error=oauth_failed`,
     session: false,
   }),
@@ -86,7 +86,7 @@ router.get(
       // Rediriger vers le frontend avec succès
       res.redirect(`${config.NEXT_CLIENT}/dashboard?oauth=success`);
     } catch (error) {
-      console.error("[OAuth Google] Erreur callback:", error);
+      console.error("[OAuth GitHub] Erreur callback:", error);
       res.redirect(`${config.NEXT_CLIENT}/login?error=session_failed`);
     }
   },

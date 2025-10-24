@@ -18,6 +18,7 @@ export type User = {
   updatedAt: Date;
   role: Role;
   googleId: string | null;
+  githubId: string | null;
   picture: string | null;
   sessions: Session[];
 };

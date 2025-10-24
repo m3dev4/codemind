@@ -134,6 +134,7 @@ exports.Prisma.UserScalarFieldEnum = {
   passwordResetExpires: 'passwordResetExpires',
   picture: 'picture',
   googleId: 'googleId',
+  githubId: 'githubId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   role: 'role'

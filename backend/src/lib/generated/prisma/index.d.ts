@@ -1022,6 +1022,7 @@ export namespace Prisma {
     passwordResetExpires: string | null
     picture: string | null
     googleId: string | null
+    githubId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     role: $Enums.Role | null
@@ -1041,6 +1042,7 @@ export namespace Prisma {
     passwordResetExpires: string | null
     picture: string | null
     googleId: string | null
+    githubId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     role: $Enums.Role | null
@@ -1060,6 +1062,7 @@ export namespace Prisma {
     passwordResetExpires: number
     picture: number
     googleId: number
+    githubId: number
     createdAt: number
     updatedAt: number
     role: number
@@ -1081,6 +1084,7 @@ export namespace Prisma {
     passwordResetExpires?: true
     picture?: true
     googleId?: true
+    githubId?: true
     createdAt?: true
     updatedAt?: true
     role?: true
@@ -1100,6 +1104,7 @@ export namespace Prisma {
     passwordResetExpires?: true
     picture?: true
     googleId?: true
+    githubId?: true
     createdAt?: true
     updatedAt?: true
     role?: true
@@ -1119,6 +1124,7 @@ export namespace Prisma {
     passwordResetExpires?: true
     picture?: true
     googleId?: true
+    githubId?: true
     createdAt?: true
     updatedAt?: true
     role?: true
@@ -1211,6 +1217,7 @@ export namespace Prisma {
     passwordResetExpires: string | null
     picture: string | null
     googleId: string | null
+    githubId: string | null
     createdAt: Date
     updatedAt: Date
     role: $Enums.Role
@@ -1247,6 +1254,7 @@ export namespace Prisma {
     passwordResetExpires?: boolean
     picture?: boolean
     googleId?: boolean
+    githubId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     role?: boolean
@@ -1268,6 +1276,7 @@ export namespace Prisma {
     passwordResetExpires?: boolean
     picture?: boolean
     googleId?: boolean
+    githubId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     role?: boolean
@@ -1287,6 +1296,7 @@ export namespace Prisma {
     passwordResetExpires?: boolean
     picture?: boolean
     googleId?: boolean
+    githubId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     role?: boolean
@@ -1306,12 +1316,13 @@ export namespace Prisma {
     passwordResetExpires?: boolean
     picture?: boolean
     googleId?: boolean
+    githubId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     role?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "firstName" | "lastName" | "username" | "password" | "emailVerified" | "emailVerificationToken" | "emailVerificationExpires" | "passwordResetToken" | "passwordResetExpires" | "picture" | "googleId" | "createdAt" | "updatedAt" | "role", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "firstName" | "lastName" | "username" | "password" | "emailVerified" | "emailVerificationToken" | "emailVerificationExpires" | "passwordResetToken" | "passwordResetExpires" | "picture" | "googleId" | "githubId" | "createdAt" | "updatedAt" | "role", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1338,6 +1349,7 @@ export namespace Prisma {
       passwordResetExpires: string | null
       picture: string | null
       googleId: string | null
+      githubId: string | null
       createdAt: Date
       updatedAt: Date
       role: $Enums.Role
@@ -1778,6 +1790,7 @@ export namespace Prisma {
     readonly passwordResetExpires: FieldRef<"User", 'String'>
     readonly picture: FieldRef<"User", 'String'>
     readonly googleId: FieldRef<"User", 'String'>
+    readonly githubId: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly role: FieldRef<"User", 'Role'>
@@ -3388,6 +3401,7 @@ export namespace Prisma {
     passwordResetExpires: 'passwordResetExpires',
     picture: 'picture',
     googleId: 'googleId',
+    githubId: 'githubId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     role: 'role'
@@ -3526,6 +3540,7 @@ export namespace Prisma {
     passwordResetExpires?: StringNullableFilter<"User"> | string | null
     picture?: StringNullableFilter<"User"> | string | null
     googleId?: StringNullableFilter<"User"> | string | null
+    githubId?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
@@ -3546,6 +3561,7 @@ export namespace Prisma {
     passwordResetExpires?: SortOrderInput | SortOrder
     picture?: SortOrderInput | SortOrder
     googleId?: SortOrderInput | SortOrder
+    githubId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     role?: SortOrder
@@ -3557,6 +3573,7 @@ export namespace Prisma {
     email?: string
     username?: string
     googleId?: string
+    githubId?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -3573,7 +3590,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     sessions?: SessionListRelationFilter
-  }, "id" | "email" | "username" | "googleId">
+  }, "id" | "email" | "username" | "googleId" | "githubId">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -3589,6 +3606,7 @@ export namespace Prisma {
     passwordResetExpires?: SortOrderInput | SortOrder
     picture?: SortOrderInput | SortOrder
     googleId?: SortOrderInput | SortOrder
+    githubId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     role?: SortOrder
@@ -3614,6 +3632,7 @@ export namespace Prisma {
     passwordResetExpires?: StringNullableWithAggregatesFilter<"User"> | string | null
     picture?: StringNullableWithAggregatesFilter<"User"> | string | null
     googleId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    githubId?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
@@ -3723,6 +3742,7 @@ export namespace Prisma {
     passwordResetExpires?: string | null
     picture?: string | null
     googleId?: string | null
+    githubId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.Role
@@ -3743,6 +3763,7 @@ export namespace Prisma {
     passwordResetExpires?: string | null
     picture?: string | null
     googleId?: string | null
+    githubId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.Role
@@ -3763,6 +3784,7 @@ export namespace Prisma {
     passwordResetExpires?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
@@ -3783,6 +3805,7 @@ export namespace Prisma {
     passwordResetExpires?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
@@ -3803,6 +3826,7 @@ export namespace Prisma {
     passwordResetExpires?: string | null
     picture?: string | null
     googleId?: string | null
+    githubId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.Role
@@ -3822,6 +3846,7 @@ export namespace Prisma {
     passwordResetExpires?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
@@ -3841,6 +3866,7 @@ export namespace Prisma {
     passwordResetExpires?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
@@ -4032,6 +4058,7 @@ export namespace Prisma {
     passwordResetExpires?: SortOrder
     picture?: SortOrder
     googleId?: SortOrder
+    githubId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     role?: SortOrder
@@ -4051,6 +4078,7 @@ export namespace Prisma {
     passwordResetExpires?: SortOrder
     picture?: SortOrder
     googleId?: SortOrder
+    githubId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     role?: SortOrder
@@ -4070,6 +4098,7 @@ export namespace Prisma {
     passwordResetExpires?: SortOrder
     picture?: SortOrder
     googleId?: SortOrder
+    githubId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     role?: SortOrder
@@ -4494,6 +4523,7 @@ export namespace Prisma {
     passwordResetExpires?: string | null
     picture?: string | null
     googleId?: string | null
+    githubId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.Role
@@ -4513,6 +4543,7 @@ export namespace Prisma {
     passwordResetExpires?: string | null
     picture?: string | null
     googleId?: string | null
+    githubId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.Role
@@ -4548,6 +4579,7 @@ export namespace Prisma {
     passwordResetExpires?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
@@ -4567,6 +4599,7 @@ export namespace Prisma {
     passwordResetExpires?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    githubId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role

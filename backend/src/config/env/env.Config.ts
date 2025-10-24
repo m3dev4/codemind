@@ -22,6 +22,8 @@ const appConfig = () => {
     GOOGLE_CALLBACK_URL: getEnv("GOOGLE_CALLBACK_URL", ""),
     GOOGLE_ID_CLIENT: getEnv("GOOGLE_ID_CLIENT", ""),
     GOOGLE_KEY_SECRET: getEnv("GOOGLE_KEY_SECRET", ""),
+    GITHUB_ID_CLIENT: getEnv("GITHUB_ID_CLIENT", ""),
+    GITHUB_SECRET_KEY: getEnv("GITHUB_SECRET_KEY", ""),
   };
 };
 
