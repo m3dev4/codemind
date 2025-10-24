@@ -11,6 +11,8 @@ import { connectRedis } from "./config/cache/redis.ts";
 import routes from "./routes/index.ts";
 import { testEmailConnection } from "./services/email.service.ts";
 import "./config/Oauth2/passport.ts"; // Initialiser passport
+// Note: Arcjet middlewares sont appliqués au niveau des routes individuelles
+// pour un contrôle plus granulaire de la protection
 
 const app = express();
 

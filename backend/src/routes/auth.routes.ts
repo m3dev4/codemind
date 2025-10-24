@@ -10,6 +10,7 @@ import {
 } from "../validations/auth.validation.ts";
 import { isAuthenticated } from "../middlewares/authMiddleware.ts";
 import * as authController from "../controllers/auth.controller.ts";
+import { arcjetAuthProtect } from "../middlewares/arcjet.middleware.ts";
 
 const router: Router = Router();
 
@@ -18,7 +19,7 @@ const router: Router = Router();
  * @desc    Inscription d'un nouvel utilisateur
  * @access  Public
  */
-router.post("/register", validate(registerSchema), authController.register);
+router.post("/register", validate(registerSchema), arcjetAuthProtect, authController.register);
 
 /**
  * @route   POST /api/auth/verify-email
@@ -32,7 +33,7 @@ router.post("/verify-email", validate(verifyEmailSchema), authController.verifyE
  * @desc    Connexion utilisateur (nécessite email vérifié)
  * @access  Public
  */
-router.post("/login", validate(loginSchema), authController.login);
+router.post("/login", validate(loginSchema), arcjetAuthProtect, authController.login);
 
 /**
  * @route   POST /api/auth/logout

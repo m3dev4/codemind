@@ -20,7 +20,6 @@ router.get(
     next();
   },
   passport.authenticate("github", {
-    
     scope: ["profile", "email"],
     session: false,
   }),

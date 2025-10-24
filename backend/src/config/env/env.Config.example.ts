@@ -25,11 +25,14 @@ const appConfig = () => {
     JWT_REFRESH_SECRET: getEnv("JWT_REFRESH_SECRET", ""), // REQUIS: Générer avec: openssl rand -base64 32
     JWT_ACCESS_EXPIRY: getEnv("JWT_ACCESS_EXPIRY", "15m"),
     JWT_REFRESH_EXPIRY: getEnv("JWT_REFRESH_EXPIRY", "7d"),
-    
+
+    // Arcjet Security
+    ARCJECT_SECRET_KEY: getEnv("ARCJECT_SECRET_KEY", ""), // REQUIS: Clé API Arcjet (https://app.arcjet.com)
+
     // OAuth Google
     GOOGLE_CLIENT_ID: getEnv("GOOGLE_CLIENT_ID", ""), // REQUIS pour OAuth Google
     GOOGLE_CLIENT_SECRET: getEnv("GOOGLE_CLIENT_SECRET", ""), // REQUIS pour OAuth Google
-    
+
     // URLs
     BACKEND_URL: getEnv("BACKEND_URL", "http://localhost:3000"),
     NEXT_CLIENT: getEnv("NEXT_CLIENT", "http://localhost:3000"), // URL du frontend

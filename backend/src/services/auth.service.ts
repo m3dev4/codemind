@@ -431,23 +431,21 @@ export const updateUserById = async (userId: string, data: UpdateUserByIdData) =
   return updatedUser;
 };
 
-
 /**
  * Service: Supprimer un utilisateur
  */
 export const deleteUserById = async (userId: string) => {
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-    })
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
 
-    if (!user) {
-        throw new Error("Utilisateur non trouvé");
-    }
+  if (!user) {
+    throw new Error("Utilisateur non trouvé");
+  }
 
-    await prisma.user.delete({
-        where: { id: userId },
-    })
+  await prisma.user.delete({
+    where: { id: userId },
+  });
 
-    return { message: "Utilisateur supprimé avec succès" };
-}
-
+  return { message: "Utilisateur supprimé avec succès" };
+};

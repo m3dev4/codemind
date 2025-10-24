@@ -24,6 +24,7 @@ const appConfig = () => {
     GOOGLE_KEY_SECRET: getEnv("GOOGLE_KEY_SECRET", ""),
     GITHUB_ID_CLIENT: getEnv("GITHUB_ID_CLIENT", ""),
     GITHUB_SECRET_KEY: getEnv("GITHUB_SECRET_KEY", ""),
+    ARCJECT_SECRET_KEY: getEnv("ARCJECT_SECRET_KEY", ""),
   };
 };
 

@@ -20,7 +20,6 @@ router.get(
     next();
   },
   passport.authenticate("google", {
-    
     scope: ["profile", "email"],
     session: false,
   }),

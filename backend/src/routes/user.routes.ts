@@ -3,6 +3,7 @@ import { isAuthenticated } from "../middlewares/authMiddleware.ts";
 import prisma from "../lib/prisma.ts";
 import { hashPassword } from "../utils/crypto.ts";
 import type { Request, Response } from "express";
+import { arcjetProtect } from "../middlewares/arcjet.middleware.ts";
 
 const router: Router = Router();
 
@@ -11,7 +12,7 @@ const router: Router = Router();
  * @desc    Obtenir le profil de l'utilisateur connecté (alias de /auth/me)
  * @access  Private
  */
-router.get("/profile", isAuthenticated, async (req: Request, res: Response) => {
+router.get("/profile", isAuthenticated, arcjetProtect, async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
 
@@ -62,7 +63,7 @@ router.get("/profile", isAuthenticated, async (req: Request, res: Response) => {
  * @desc    Obtenir toutes les sessions actives de l'utilisateur
  * @access  Private
  */
-router.get("/sessions", isAuthenticated, async (req: Request, res: Response) => {
+router.get("/sessions", isAuthenticated, arcjetProtect, async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
 
@@ -112,53 +113,58 @@ router.get("/sessions", isAuthenticated, async (req: Request, res: Response) => 
  * @desc    Supprimer une session spécifique (déconnexion d'un appareil)
  * @access  Private
  */
-router.delete("/sessions/:sessionId", isAuthenticated, async (req: Request, res: Response) => {
-  try {
-    const userId = req.user?.userId;
-    const { sessionId } = req.params;
+router.delete(
+  "/sessions/:sessionId",
+  isAuthenticated,
+  arcjetProtect,
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+      const { sessionId } = req.params;
 
-    if (!userId) {
-      return res.status(401).json({
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          message: "Non authentifié",
+        });
+      }
+
+      // Vérifier que la session appartient à l'utilisateur
+      const session = await prisma.session.findFirst({
+        where: { id: sessionId, userId },
+      });
+
+      if (!session) {
+        return res.status(404).json({
+          success: false,
+          message: "Session non trouvée",
+        });
+      }
+
+      await prisma.session.delete({
+        where: { id: sessionId },
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Session supprimée avec succès",
+      });
+    } catch (error) {
+      console.error("[User Routes] Erreur delete session:", error);
+      return res.status(500).json({
         success: false,
-        message: "Non authentifié",
+        message: "Erreur lors de la suppression de la session",
       });
     }
-
-    // Vérifier que la session appartient à l'utilisateur
-    const session = await prisma.session.findFirst({
-      where: { id: sessionId, userId },
-    });
-
-    if (!session) {
-      return res.status(404).json({
-        success: false,
-        message: "Session non trouvée",
-      });
-    }
-
-    await prisma.session.delete({
-      where: { id: sessionId },
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Session supprimée avec succès",
-    });
-  } catch (error) {
-    console.error("[User Routes] Erreur delete session:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Erreur lors de la suppression de la session",
-    });
-  }
-});
+  },
+);
 
 /**
  * @route   PUT /api/users/profile
  * @desc    Mettre à jour le profil de l'utilisateur
  * @access  Private
  */
-router.put("/profile", isAuthenticated, async (req: Request, res: Response) => {
+router.put("/profile", isAuthenticated, arcjetProtect, async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
     const { firstName, lastName, username, password } = req.body;

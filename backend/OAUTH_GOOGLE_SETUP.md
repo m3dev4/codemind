@@ -3,31 +3,38 @@
 ## ✅ Problèmes Corrigés
 
 ### **1. Routes Dupliquées** ✅
+
 - **Avant:** Deux routes `/google/callback` identiques
 - **Après:** Route `/google` pour initier + `/google/callback` pour le callback
 
 ### **2. Configuration Passport** ✅
+
 - **Avant:** Credentials vides (clientID, clientSecret, callbackURL)
 - **Après:** Configuration depuis `env.Config` avec gestion complète des cas
 
 ### **3. Création JWT/Session** ✅
+
 - **Avant:** Redirection simple sans token
 - **Après:** Génération JWT + création session + cookies httpOnly
 
 ### **4. Schéma Prisma** ✅
+
 - **Avant:** `googleId String?` (non unique)
 - **Après:** `googleId String? @unique` + `onDelete: Cascade` pour sessions
 
 ### **5. Gestion Utilisateurs** ✅
+
 - Liaison compte Google à compte existant si même email
 - Génération username unique automatique
 - Vérification email automatique via Google
 
 ### **6. Initialisation Passport** ✅
+
 - Import et initialisation dans `index.ts`
 - `passport.initialize()` middleware ajouté
 
 ### **7. Variables d'Environnement** ✅
+
 - Ajout `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
 - Ajout `BACKEND_URL`, `NEXT_CLIENT`
 
@@ -132,22 +139,23 @@ sequenceDiagram
 ### **Endpoints**
 
 #### **1. Initier l'Authentification**
+
 ```
 GET /api/oauth/googleClient/google
 ```
 
 **Usage Frontend (React/Next.js):**
+
 ```tsx
 const handleGoogleLogin = () => {
   window.location.href = "http://localhost:3000/api/oauth/googleClient/google";
 };
 
-<button onClick={handleGoogleLogin}>
-  Se connecter avec Google
-</button>
+<button onClick={handleGoogleLogin}>Se connecter avec Google</button>;
 ```
 
 #### **2. Callback (Automatique)**
+
 ```
 GET /api/oauth/googleClient/google/callback
 ```
@@ -155,6 +163,7 @@ GET /api/oauth/googleClient/google/callback
 Ce endpoint est appelé automatiquement par Google après l'authentification.
 
 **Redirections possibles:**
+
 - ✅ Succès: `http://localhost:3000/dashboard?oauth=success`
 - ❌ Échec OAuth: `http://localhost:3000/login?error=oauth_failed`
 - ❌ Pas d'utilisateur: `http://localhost:3000/login?error=no_user`
@@ -172,7 +181,7 @@ Ce endpoint est appelé automatiquement par Google après l'authentification.
 ✅ **Liaison de Comptes** - Si email existe déjà, lie le compte Google  
 ✅ **Username Unique** - Génération automatique si collision  
 ✅ **CSRF Protection** - sameSite: "lax" sur les cookies  
-✅ **Cascade Delete** - Sessions supprimées avec l'utilisateur  
+✅ **Cascade Delete** - Sessions supprimées avec l'utilisateur
 
 ### **Bonnes Pratiques**
 
@@ -198,11 +207,13 @@ Ce endpoint est appelé automatiquement par Google après l'authentification.
 ### **Test Manuel**
 
 1. Démarrer le serveur :
+
    ```bash
    npm run dev
    ```
 
 2. Ouvrir le navigateur :
+
    ```
    http://localhost:3000/api/oauth/googleClient/google
    ```
@@ -215,6 +226,7 @@ Ce endpoint est appelé automatiquement par Google après l'authentification.
    ```bash
    npx prisma studio
    ```
+
    - Utilisateur créé
    - googleId présent
    - Session créée
@@ -270,6 +282,7 @@ curl -X GET "http://localhost:3000/api/oauth/googleClient/google/callback?code=Y
 ## 🔄 Workflow Complet
 
 ### **Scénario 1: Nouvel Utilisateur**
+
 1. Utilisateur clique "Google Login"
 2. Google authentifie l'utilisateur
 3. Backend crée un nouvel utilisateur
@@ -279,6 +292,7 @@ curl -X GET "http://localhost:3000/api/oauth/googleClient/google/callback?code=Y
 7. Redirection vers dashboard
 
 ### **Scénario 2: Utilisateur Existant (avec Google)**
+
 1. Utilisateur clique "Google Login"
 2. Google authentifie
 3. Backend trouve l'utilisateur par `googleId`
@@ -286,6 +300,7 @@ curl -X GET "http://localhost:3000/api/oauth/googleClient/google/callback?code=Y
 5. Redirection vers dashboard
 
 ### **Scénario 3: Liaison de Compte**
+
 1. Utilisateur s'est inscrit manuellement (email + password)
 2. Plus tard, clique "Google Login" avec le même email
 3. Backend trouve l'utilisateur par email
@@ -299,20 +314,24 @@ curl -X GET "http://localhost:3000/api/oauth/googleClient/google/callback?code=Y
 ## ⚠️ Troubleshooting
 
 ### **Erreur: "redirect_uri_mismatch"**
+
 - Vérifiez que l'URI de callback est exactement la même dans Google Cloud Console
 - Format: `http://localhost:3000/api/oauth/googleClient/google/callback`
 
 ### **Erreur: "GOOGLE_CLIENT_ID is not defined"**
+
 - Vérifiez votre fichier `.env`
 - Redémarrez le serveur après modification du `.env`
 - Vérifiez que `env.Config.ts` est créé (copié depuis example)
 
 ### **Utilisateur créé mais pas de JWT**
+
 - Vérifiez les logs dans la console
 - Vérifiez que `JWT_SECRET_KEY` est défini
 - Vérifiez que la session a bien été créée dans Prisma Studio
 
 ### **Redirection infinie**
+
 - Vérifiez que les cookies sont bien définis
 - Vérifiez la configuration CORS (credentials: true)
 - Vérifiez que `sameSite` est "lax" en développement
