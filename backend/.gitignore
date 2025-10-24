@@ -20,6 +20,7 @@ jspm_packages/
 .env.test.local
 .env.production.local
 .env.*.local
+src/config/env/env.Config.ts
 
 # ==========================================
 # Build Output
@@ -160,4 +161,8 @@ docker-compose.override.yml
 !.env.example
 !.gitkeep
 
-/src/generated/prisma
+# ==========================================
+# Prisma Generated Files
+# ==========================================
+src/generated/prisma/
+src/lib/generated/prisma/

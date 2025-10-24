@@ -4,13 +4,56 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id    String @id @default(cuid())
-  email String @unique
-  name  String
+  id        String @id @default(cuid())
+  email     String @unique
+  firstName String
+  lastName  String
+  username  String @unique
+  password  String
+
+  emailVerified            Boolean @default(false)
+  emailVerificationToken   String?
+  emailVerificationExpires String?
+
+  passwordResetToken   String?
+  passwordResetExpires String?
+
+  picture String?
+
+  googleId String? @unique
+  githubId String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  role Role @default(USER)
+  sessions Session[]
+}
+
+model Session {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  userAgent String
+  location  String
+  expiresAt DateTime
+  device    String
+  ip        String
+  os        String
+  browser   String
+  platform  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  USER
 }
