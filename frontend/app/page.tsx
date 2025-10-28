@@ -37,12 +37,7 @@ const HomePage = () => {
         <div className="py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Image
-                src={codemindLogo}
-                alt="Codemind Logo"
-                height={60}
-                width={60}
-              />
+              <Image src={codemindLogo} alt="Codemind Logo" height={60} width={60} />
               <h1 className="text-white font-sora font-bold uppercase mt-2 tracking-widest">
                 Codemind
               </h1>
@@ -64,9 +59,7 @@ const HomePage = () => {
               className="rounded-lg border-0 outline-none cursor-pointer transform hover:scale-101 transition-transform"
               onClick={() => router.push("/auth/sign-up")}
             >
-              <span className="font-bold uppercase tracking-wider">
-                Essayez gratuitement
-              </span>
+              <span className="font-bold uppercase tracking-wider">Essayez gratuitement</span>
             </Button>
           </div>
         </div>

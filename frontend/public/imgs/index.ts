@@ -1,4 +1,3 @@
-import codemindLogo from "./codemind-logo.png"
+import codemindLogo from "./codemind-logo.png";
 
-
-export {codemindLogo}
+export { codemindLogo };

@@ -3,6 +3,24 @@ import { AuthState } from "@/types/user/user";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+// Helper function to update cookie
+const updateAuthCookie = (state: Partial<AuthState>) => {
+  if (typeof window !== "undefined") {
+    const cookieData = {
+      state: {
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+        pendingEmail: state.pendingEmail,
+      },
+      version: 0,
+    };
+    const serializedState = JSON.stringify(cookieData);
+    document.cookie = `auth=${encodeURIComponent(
+      serializedState,
+    )}; path=/; expires=Thu, 01 Jan 2050 00:00:00 UTC; sameSite=Lax`;
+  }
+};
+
 export const useAuthState = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -13,21 +31,69 @@ export const useAuthState = create<AuthState>()(
       pendingEmail: null,
       hydrated: false,
 
-      setUser: (user) => set({ user }),
-      updateUser: (userData) =>
+      setUser: (user) => {
+        set({ user });
+        // Update cookie when user changes
+        updateAuthCookie({
+          user,
+          isAuthenticated: get().isAuthenticated,
+          pendingEmail: get().pendingEmail,
+        });
+      },
+      updateUser: (userData) => {
         set((state) => ({
           user: state.user ? { ...state.user, ...userData } : null,
-        })),
-      setLoading: (isLoading: boolean) => set({ isLoading }),
+        }));
+        const state = get();
+        updateAuthCookie({
+          user: state.user,
+          isAuthenticated: state.isAuthenticated,
+          pendingEmail: state.pendingEmail,
+        });
+      },
+      setIsLoading: (isLoading) => set({ isLoading }),
       setError: (error) => set({ error }),
-      setPendingVerification: (email) => set({ pendingEmail: email }),
-      setEmailVerified: (user) => set({ user, isAuthenticated: true }),
-      logout: () => set({ user: null, isAuthenticated: false }),
+      setAuthenticated: (isAuthenticated: boolean) => {
+        set({ isAuthenticated });
+        const state = get();
+        updateAuthCookie({ user: state.user, isAuthenticated, pendingEmail: state.pendingEmail });
+      },
+      setPendingVerification: (email) => {
+        set({ pendingEmail: email });
+        const state = get();
+        updateAuthCookie({
+          user: state.user,
+          isAuthenticated: state.isAuthenticated,
+          pendingEmail: email,
+        });
+      },
+      setEmailVerified: (emailVerified) => {
+        set((state) => ({
+          user: state.user ? { ...state.user, emailVerified } : null,
+        }));
+        const state = get();
+        updateAuthCookie({
+          user: state.user,
+          isAuthenticated: state.isAuthenticated,
+          pendingEmail: state.pendingEmail,
+        });
+      },
+      logout: () => {
+        set({ user: null, isAuthenticated: false, pendingEmail: null });
+        // Clear the auth cookie
+        if (typeof window !== "undefined") {
+          document.cookie = "auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        }
+      },
       setHydrated: (hydrated) => set({ hydrated: true }),
+      me: async () => {
+        // TODO: Implement API call
+        return null;
+      },
 
       needsEmailVerifcation: () => !!get().user?.emailVerified,
       isAdmin: () => get().user?.role === ROLE.ADMIN,
-      getUserRole: () => get().user?.role,
+      getUserRole: () => get().user?.role || ROLE.USER,
     }),
     {
       name: "auth",
@@ -44,16 +110,17 @@ export const useAuthState = create<AuthState>()(
         }
 
         if (state && typeof window !== "undefined") {
-          const serializedState = JSON.stringify({ state, version: 0 });
-          document.cookie = `auth=${encodeURIComponent(
-            serializedState
-          )}; path=/; expires=Thu, 01 Jan 2050 00:00:00 UTC; sameSite=Lax; secure; httpOnly`;
+          updateAuthCookie({
+            user: state.user,
+            isAuthenticated: state.isAuthenticated,
+            pendingEmail: state.pendingEmail,
+          });
         }
 
         if (state) {
           state.setHydrated(true);
         }
       },
-    }
-  )
+    },
+  ),
 );

@@ -27,7 +27,7 @@ export const useOAuthCallback = () => {
         default:
           toast.error("Une erreur est survenue lors de l'authentification");
       }
-      
+
       // Clean up URL params
       const url = new URL(window.location.href);
       url.searchParams.delete("error");
@@ -36,7 +36,7 @@ export const useOAuthCallback = () => {
 
     if (oauth === "success") {
       toast.success("Connexion réussie!");
-      
+
       // Clean up URL params
       const url = new URL(window.location.href);
       url.searchParams.delete("oauth");

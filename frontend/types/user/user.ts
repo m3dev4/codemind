@@ -23,17 +23,16 @@ export interface User {
 }
 
 export interface SignUpData {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    username: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  username: string;
 }
 
-
 export interface SignInData {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
 export interface AuthState {
@@ -50,6 +49,7 @@ export interface AuthState {
   logout: () => void;
   setIsLoading: (isLoading: boolean | null) => void;
   setError: (error: boolean | null) => void;
+  setAuthenticated: (isAuthenticated: boolean) => void;
   setPendingVerification: (email: string) => void;
   setEmailVerified: (emailVerified: boolean) => void;
   setHydrated: (hydrated: boolean) => void;

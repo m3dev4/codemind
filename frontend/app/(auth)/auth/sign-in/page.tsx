@@ -22,9 +22,13 @@ import { getErrorMessage } from "@/utils/errorMessage";
 import { Toaster } from "@/components/ui/sonner";
 import { loginWithGoogle, loginWithGithub } from "@/utils/oauth";
 import { useOAuthCallback } from "@/hooks/auth/useOAuthCallback";
+import { useAuthRoute } from "@/hooks/auth/useProtectedRoute";
+import { AuthDebug } from "@/components/debug/AuthDebug";
+import Link from "next/link";
 
 const SignInPage = () => {
   useOAuthCallback();
+  useAuthRoute();
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -67,10 +71,7 @@ const SignInPage = () => {
         // Message d'erreur générique du backend
         const message = backendError.message;
 
-        if (
-          message.includes("existe déjà") ||
-          message.includes("already exists")
-        ) {
+        if (message.includes("existe déjà") || message.includes("already exists")) {
           toast.error("Utilisateur déjà existant");
           setErrorMessage("Utilisateur déjà existant");
         } else {
@@ -142,9 +143,7 @@ const SignInPage = () => {
                     className="border-stone-500 text-white font-inter"
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.email.message}
-                    </p>
+                    <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
                   )}
                 </div>
                 <div className="relative">
@@ -156,23 +155,22 @@ const SignInPage = () => {
                     placeholder="Mot de passe"
                     className="border-stone-500 text-white font-inter"
                   />
-                  <Button
-                    type="button"
-                    onClick={isShowPassword}
-                    className="absolute top-0 right-0"
-                  >
-                    {showPassword ? (
-                      <Eye className="size-4" />
-                    ) : (
-                      <EyeOff className="size-4" />
-                    )}
+                  <Button type="button" onClick={isShowPassword} className="absolute top-0 right-0">
+                    {showPassword ? <Eye className="size-4" /> : <EyeOff className="size-4" />}
                   </Button>
 
                   {errors.password && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.password.message}
-                    </p>
+                    <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
                   )}
+                </div>
+
+                <div className="text-right ">
+                  <Link
+                    href="/password/forgot-password"
+                    className="text-sm LoginInput text-white hover:underline"
+                  >
+                    Mot de passe oublié?
+                  </Link>
                 </div>
 
                 <Button
@@ -191,6 +189,7 @@ const SignInPage = () => {
           </form>
         </div>
       </div>
+      <AuthDebug />
     </section>
   );
 };

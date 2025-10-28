@@ -14,8 +14,7 @@ const sora = Sora({
 
 export const metadata: Metadata = {
   title: "Codemind",
-  description:
-    "Comprends n’importe quel code comme si c’était toi qui l’avais écrit.",
+  description: "Comprends n’importe quel code comme si c’était toi qui l’avais écrit.",
 };
 
 export default function RootLayout({

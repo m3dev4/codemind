@@ -12,12 +12,8 @@ const AuthLayout = () => {
             <div className="container mx-auto">
               <div className="py-5">
                 <div className="flex flex-col justify-center items-center">
-                  <h2 className="text-2xl font-bold font-sora">
-                    Happy to see you 😊
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Veuillez vous connecter ou vous inscrire
-                  </p>
+                  <h2 className="text-2xl font-bold font-sora">Happy to see you 😊</h2>
+                  <p className="text-muted-foreground">Veuillez vous connecter ou vous inscrire</p>
 
                   <div className="w-full py-7 flex items-center justify-center">
                     <Tabs defaultValue="sign-in" className="w-xs">

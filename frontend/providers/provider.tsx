@@ -18,7 +18,7 @@ export default function QueryProvider({ children }: QueryProviderProps) {
             retry: 1,
           },
         },
-      })
+      }),
   );
   return (
     <QueryClientProvider client={queryClient}>

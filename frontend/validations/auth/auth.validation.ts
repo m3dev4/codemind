@@ -16,7 +16,7 @@ export const registerSchema = z.object({
     .max(100, "Le mot de passe est trop long")
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre"
+      "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre",
     ),
 
   firstName: z
@@ -37,7 +37,7 @@ export const registerSchema = z.object({
     .max(30, "Le nom d'utilisateur est trop long")
     .regex(
       /^[a-zA-Z0-9_-]+$/,
-      "Le nom d'utilisateur ne peut contenir que des lettres, chiffres, tirets et underscores"
+      "Le nom d'utilisateur ne peut contenir que des lettres, chiffres, tirets et underscores",
     )
     .toLowerCase()
     .trim(),
@@ -89,9 +89,7 @@ export const forgotPasswordSchema = z.object({
  * Validation pour reset password
  */
 export const resetPasswordSchema = z.object({
-  token: z
-    .string({ message: "Le token est requis" })
-    .min(1, "Le token est requis"),
+  token: z.string({ message: "Le token est requis" }).min(1, "Le token est requis"),
 
   newPassword: z
     .string({ message: "Le nouveau mot de passe est requis" })
@@ -99,7 +97,7 @@ export const resetPasswordSchema = z.object({
     .max(100, "Le mot de passe est trop long")
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre"
+      "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre",
     ),
 });
 

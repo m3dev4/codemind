@@ -1,8 +1,5 @@
 "use client";
-import {
-  RegisterInput,
-  registerSchema,
-} from "@/validations/auth/auth.validation";
+import { RegisterInput, registerSchema } from "@/validations/auth/auth.validation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,9 +17,12 @@ import { getErrorMessage } from "@/utils/errorMessage";
 import { Toaster } from "@/components/ui/sonner";
 import { loginWithGoogle, loginWithGithub } from "@/utils/oauth";
 import { useOAuthCallback } from "@/hooks/auth/useOAuthCallback";
+import { useAuthRoute } from "@/hooks/auth/useProtectedRoute";
+import Link from "next/link";
 
 const SingnUpPage = () => {
   useOAuthCallback();
+  useAuthRoute();
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -65,10 +65,7 @@ const SingnUpPage = () => {
         // Message d'erreur générique du backend
         const message = backendError.message;
 
-        if (
-          message.includes("existe déjà") ||
-          message.includes("already exists")
-        ) {
+        if (message.includes("existe déjà") || message.includes("already exists")) {
           toast.error("Utilisateur déjà existant");
           setErrorMessage("Utilisateur déjà existant");
         } else {
@@ -124,9 +121,7 @@ const SingnUpPage = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <Card className="w-[400px] h-full shadow-2xl bg-stone-800 border-none outline-none flex flex-col">
               <CardHeader>
-                <CardTitle className="text-center text-white font-inter">
-                  Créer un compte
-                </CardTitle>
+                <CardTitle className="text-center text-white font-inter">Créer un compte</CardTitle>
               </CardHeader>
 
               <CardContent className="space-y-5">
@@ -141,9 +136,7 @@ const SingnUpPage = () => {
                       className="border-stone-500 text-white font-inter"
                     />
                     {errors.firstName && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {errors.firstName.message}
-                      </p>
+                      <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>
                     )}
                   </div>
                   <div>
@@ -156,9 +149,7 @@ const SingnUpPage = () => {
                       className="border-stone-500 text-white font-inter"
                     />
                     {errors.lastName && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {errors.lastName.message}
-                      </p>
+                      <p className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>
                     )}
                   </div>
                 </div>
@@ -172,9 +163,7 @@ const SingnUpPage = () => {
                     className="border-stone-500 text-white font-inter"
                   />
                   {errors.username && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.username.message}
-                    </p>
+                    <p className="text-red-500 text-xs mt-1">{errors.username.message}</p>
                   )}
                 </div>
                 <div>
@@ -187,9 +176,7 @@ const SingnUpPage = () => {
                     className="border-stone-500 text-white font-inter"
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.email.message}
-                    </p>
+                    <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
                   )}
                 </div>
                 <div className="relative">
@@ -201,22 +188,12 @@ const SingnUpPage = () => {
                     placeholder="Mot de passe"
                     className="border-stone-500 text-white font-inter"
                   />
-                  <Button
-                    type="button"
-                    onClick={isShowPassword}
-                    className="absolute top-0 right-0"
-                  >
-                    {showPassword ? (
-                      <Eye className="size-4" />
-                    ) : (
-                      <EyeOff className="size-4" />
-                    )}
+                  <Button type="button" onClick={isShowPassword} className="absolute top-0 right-0">
+                    {showPassword ? <Eye className="size-4" /> : <EyeOff className="size-4" />}
                   </Button>
 
                   {errors.password && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.password.message}
-                    </p>
+                    <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
                   )}
                 </div>
 
