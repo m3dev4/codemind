@@ -22,6 +22,20 @@ export interface User {
   sessions: Session[];
 }
 
+export interface SignUpData {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+}
+
+
+export interface SignInData {
+    email: string;
+    password: string;
+}
+
 export interface AuthState {
   user: User | null;
   isLoading: boolean | null;

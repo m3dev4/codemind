@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Sora } from "next/font/google";
 import "./globals.css";
+import QueryProvider from "@/providers/provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,7 +27,7 @@ export default function RootLayout({
     <html lang="fr">
       <body className={`${inter.variable} ${sora.variable} antialiased`}>
         <main className="min-h-screen w-full linear">
-          {children}
+          <QueryProvider>{children}</QueryProvider>
         </main>
       </body>
     </html>
