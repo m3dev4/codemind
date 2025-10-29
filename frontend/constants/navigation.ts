@@ -41,7 +41,33 @@ export const navigationsFooter = (firstName: string, id: string) => [
   {
     id: 2,
     name: "Profil",
-    href: "/profil",
+    href: `/profil/${id}`,
     icon: "👤",
   },
 ];
+
+
+
+export const parametresNav = (firstName: string, id: string) => [
+  {
+    id: 1,
+    name: "Compte",
+    href: `/parametres/${firstName}/${id}/account`,
+   
+  },
+  {
+    id: 2,
+    name: "Sessions",
+    href: `/parametres/${firstName}/${id}/sessions`,   
+  },
+    {
+    id: 3,
+    name: "Billing",
+    href: `/parametres/${firstName}/${id}/billing`,   
+  },
+    {
+    id: 4,
+    name: "Preferences",
+    href: `/parametres/${firstName}/${id}/preferences`,   
+  },
+]

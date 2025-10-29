@@ -1,22 +1,20 @@
-import React from "react";
+"use client";
 
-interface ParametrePageProps {
-  params: {
-    firstName: string;
-    id: string;
-  };
-}
+import { useAuthState } from "@/stores/auth/authState";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-const ParametrePage = ({ params }: ParametrePageProps) => {
-  return (
-    <div className="p-6 text-white">
-      <h1 className="text-2xl font-bold mb-4">Paramètres</h1>
-      <div className="space-y-2">
-        <p>Prénom: {params.firstName}</p>
-        <p>ID: {params.id}</p>
-      </div>
-    </div>
-  );
+const ParametrePage = () => {
+  const { user } = useAuthState();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user?.firstName && user?.id) {
+      router.replace(`/parametres/${user.firstName}/${user.id}/account`);
+    }
+  }, [user, router]);
+
+  return null;
 };
 
 export default ParametrePage;
