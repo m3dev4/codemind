@@ -1,4 +1,6 @@
 "use client";
+import { AppSidebar } from "@/components/layouts/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { useProtectedRoute } from "@/hooks/auth/useProtectedRoute";
 import { Loader2 } from "lucide-react";
 
@@ -23,5 +25,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     );
   }
 
-  return <>{children}</>;
+  return (
+    <SidebarProvider defaultOpen={true}>
+      <div className="flex h-screen w-full bg-neutral-950">
+        <AppSidebar />
+        <main className="flex-1 flex flex-col overflow-hidden">{children}</main>
+      </div>
+    </SidebarProvider>
+  );
 }
