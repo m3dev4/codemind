@@ -2,7 +2,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useAuthState } from "@/stores/auth/authState";
-import { Loader } from "lucide-react";
+import { useSessions } from "@/hooks/auth/useSessions";
+import { SessionCard } from "@/components/ui/session-card";
+import { Loader, Activity } from "lucide-react";
 import React, { useEffect } from "react";
 
 interface User {
@@ -11,6 +13,7 @@ interface User {
 
 const ProfilPage = () => {
   const { user, isLoading, isAuthenticated } = useAuthState();
+  const { sessions, isLoading: sessionsLoading, error: sessionsError } = useSessions();
 
   const formatDate = (dateValue: string | Date | undefined) => {
     if (!dateValue) return "N/A";
@@ -49,7 +52,7 @@ const ProfilPage = () => {
             <Avatar className="realtive">
               <AvatarImage src={user?.picture || ""} />
               <AvatarFallback className="text-black">
-                {user?.firstName?.charAt(0) + user?.lastName?.charAt(0)}
+                {(user?.firstName?.charAt(0) || '') + (user?.lastName?.charAt(0) || '')}
               </AvatarFallback>
             </Avatar>
             <div className="py-5 flex items-center justify-center gap-2">
@@ -75,9 +78,32 @@ const ProfilPage = () => {
           </aside>
         </section>
 
-        {/* Section activités */}
+        {/* Section Sessions Actives */}
         <section className="flex flex-col w-full p-3 items-center relative space-y-5">
-          <h2 className="font-sora text-3xl font-bold">Activités</h2>
+          <div className="flex items-center gap-2">
+            <Activity className="h-6 w-6" />
+            <h2 className="font-sora text-3xl font-bold">Sessions Actives</h2>
+          </div>
+          
+          {sessionsLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader className="animate-spin h-5 w-5" />
+            </div>
+          ) : sessionsError ? (
+            <div className="text-red-500 text-center py-4">
+              {sessionsError}
+            </div>
+          ) : sessions.length === 0 ? (
+            <div className="text-muted-foreground text-center py-8">
+              Aucune session active
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl">
+              {sessions.map((session) => (
+                <SessionCard key={session.id} session={session} />
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Section Abonnment Actuel */}

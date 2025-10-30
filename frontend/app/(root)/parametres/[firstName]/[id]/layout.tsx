@@ -10,14 +10,14 @@ const ParametreLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen w-full">
+    <div className="min-h-screen w-full overflow-auto">
       <div className="container mx-auto px-6 py-8 max-w-6xl">
         <div className="mb-8">
           <h1 className="font-sora text-3xl font-bold mb-2">Paramètres</h1>
           <p className="text-muted-foreground text-sm">Gérez votre compte et vos préférences</p>
         </div>
 
-        <div className="border-b border-border mb-8">
+        <div className="border-b border-border mb-8 sticky top-0 z-10 bg-neutral-900 py-2">
           <nav className="flex gap-8 overflow-x-auto">
             {parametresNav(user?.firstName || "", user?.id || "").map((nav) => {
               const isActive = pathname === nav.href;
@@ -43,7 +43,7 @@ const ParametreLayout = ({ children }: { children: React.ReactNode }) => {
           </nav>
         </div>
 
-        <div className="animate-in fade-in duration-300">
+        <div className="animate-in fade-in duration-300 overflow-y-auto">
           {children}
         </div>
       </div>
