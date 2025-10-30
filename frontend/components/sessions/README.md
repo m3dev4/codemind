@@ -7,21 +7,27 @@ Ce module contient tous les composants nécessaires pour gérer les sessions uti
 ## 🎨 Composants
 
 ### `SessionCardEnhanced`
+
 Carte affichant les détails d'une session avec possibilité de suppression.
 
 ### `SessionsList`
+
 Liste complète des sessions avec en-tête, statistiques et actions groupées.
 
 ### `EmptySessionsState`
+
 État vide affiché quand aucune session n'est active.
 
 ### `SessionsLoading`
+
 Skeleton loader pour l'état de chargement.
 
 ### `SessionsError`
+
 Composant d'erreur avec possibilité de réessayer.
 
 ### `DeleteSessionDialog`
+
 Dialog de confirmation pour la suppression d'une session.
 
 ## 🔧 Installation requise
@@ -44,7 +50,12 @@ pnpm add @radix-ui/react-alert-dialog
 
 ```tsx
 import { useSessions } from "@/hooks/auth/useSessionsQuery";
-import { SessionsList, EmptySessionsState, SessionsLoading, SessionsError } from "@/components/sessions";
+import {
+  SessionsList,
+  EmptySessionsState,
+  SessionsLoading,
+  SessionsError,
+} from "@/components/sessions";
 
 const SessionsPage = () => {
   const { data: sessions, isLoading, error, refetch } = useSessions();
@@ -62,10 +73,7 @@ const SessionsPage = () => {
 ```tsx
 import { SessionCardEnhanced } from "@/components/sessions";
 
-<SessionCardEnhanced 
-  session={sessionData} 
-  isCurrentSession={true} 
-/>
+<SessionCardEnhanced session={sessionData} isCurrentSession={true} />;
 ```
 
 ## 🎯 Fonctionnalités

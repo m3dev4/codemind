@@ -146,10 +146,7 @@ export const SessionCardEnhanced: React.FC<SessionCardEnhancedProps> = ({
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-3 w-3 shrink-0" />
-              <span>
-                Expire le{" "}
-                {format(expiresDate, "d MMM yyyy 'à' HH:mm", { locale: fr })}
-              </span>
+              <span>Expire le {format(expiresDate, "d MMM yyyy 'à' HH:mm", { locale: fr })}</span>
             </div>
           </div>
         </CardContent>

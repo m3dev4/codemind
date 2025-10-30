@@ -1,7 +1,6 @@
 import instance from "@/utils/axios";
 import { useState, useEffect } from "react";
 
-
 interface Session {
   id: string;
   device: string;

@@ -52,7 +52,7 @@ const ProfilPage = () => {
             <Avatar className="realtive">
               <AvatarImage src={user?.picture || ""} />
               <AvatarFallback className="text-black">
-                {(user?.firstName?.charAt(0) || '') + (user?.lastName?.charAt(0) || '')}
+                {(user?.firstName?.charAt(0) || "") + (user?.lastName?.charAt(0) || "")}
               </AvatarFallback>
             </Avatar>
             <div className="py-5 flex items-center justify-center gap-2">
@@ -84,19 +84,15 @@ const ProfilPage = () => {
             <Activity className="h-6 w-6" />
             <h2 className="font-sora text-3xl font-bold">Sessions Actives</h2>
           </div>
-          
+
           {sessionsLoading ? (
             <div className="flex items-center justify-center py-8">
               <Loader className="animate-spin h-5 w-5" />
             </div>
           ) : sessionsError ? (
-            <div className="text-red-500 text-center py-4">
-              {sessionsError}
-            </div>
+            <div className="text-red-500 text-center py-4">{sessionsError}</div>
           ) : sessions.length === 0 ? (
-            <div className="text-muted-foreground text-center py-8">
-              Aucune session active
-            </div>
+            <div className="text-muted-foreground text-center py-8">Aucune session active</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl">
               {sessions.map((session) => (

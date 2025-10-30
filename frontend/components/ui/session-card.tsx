@@ -17,10 +17,10 @@ interface SessionCardProps {
 
 const getDeviceIcon = (device: string) => {
   const deviceLower = device.toLowerCase();
-  if (deviceLower.includes('mobile') || deviceLower.includes('phone')) {
+  if (deviceLower.includes("mobile") || deviceLower.includes("phone")) {
     return <Smartphone className="h-4 w-4" />;
   }
-  if (deviceLower.includes('tablet')) {
+  if (deviceLower.includes("tablet")) {
     return <Tablet className="h-4 w-4" />;
   }
   return <Monitor className="h-4 w-4" />;
@@ -59,11 +59,15 @@ export const SessionCard = ({ session }: SessionCardProps) => {
       <CardContent className="space-y-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Globe className="h-3 w-3" />
-          <span>{session.browser} • {session.os}</span>
+          <span>
+            {session.browser} • {session.os}
+          </span>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <MapPin className="h-3 w-3" />
-          <span>{session.location} • {session.ip}</span>
+          <span>
+            {session.location} • {session.ip}
+          </span>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Clock className="h-3 w-3" />

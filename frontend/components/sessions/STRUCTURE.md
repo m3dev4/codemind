@@ -115,61 +115,71 @@ frontend/
 ## Hooks TanStack Query
 
 ### `useSessions()`
+
 ```tsx
 const { data, isLoading, error, refetch, isRefetching } = useSessions();
 ```
+
 - **Query Key**: `['sessions', 'list']`
 - **Route**: `GET /api/users/sessions`
 - **Cache**: 5 minutes
 - **Retry**: 2 fois
 
 ### `useDeleteSession()`
+
 ```tsx
 const { mutate, isPending } = useDeleteSession();
 mutate(sessionId);
 ```
+
 - **Route**: `DELETE /api/users/sessions/:sessionId`
 - **Invalidation**: `['sessions', 'list']`
 - **Toast**: Succès/Erreur automatique
 
 ### `useDeleteAllOtherSessions()`
+
 ```tsx
 const { mutate, isPending } = useDeleteAllOtherSessions();
 mutate([sessionId1, sessionId2, ...]);
 ```
+
 - **Routes**: Multiple `DELETE /api/users/sessions/:sessionId`
 - **Invalidation**: `['sessions', 'list']`
 - **Toast**: Succès/Erreur automatique
 
 ## États du composant
 
-| État | Composant affiché | Condition |
-|------|------------------|-----------|
-| **Loading** | `SessionsLoading` | `isLoading === true` |
-| **Error** | `SessionsError` | `error !== null && !isLoading` |
-| **Empty** | `EmptySessionsState` | `sessions.length === 0` |
-| **Success** | `SessionsList` | `sessions.length > 0` |
+| État        | Composant affiché    | Condition                      |
+| ----------- | -------------------- | ------------------------------ |
+| **Loading** | `SessionsLoading`    | `isLoading === true`           |
+| **Error**   | `SessionsError`      | `error !== null && !isLoading` |
+| **Empty**   | `EmptySessionsState` | `sessions.length === 0`        |
+| **Success** | `SessionsList`       | `sessions.length > 0`          |
 
 ## Fonctionnalités clés
 
 ### ✅ Sécurité
+
 - Dialog de confirmation pour chaque suppression
 - Protection de la session actuelle
 - Validation des permissions côté backend
 
 ### ✅ UX
+
 - Loading states avec skeletons
 - Toast notifications
 - Animations fluides
 - Responsive design
 
 ### ✅ Performance
+
 - Cache avec TanStack Query
 - Invalidation intelligente
 - Retry automatique en cas d'erreur
 - Requêtes parallèles pour suppressions multiples
 
 ### ✅ Accessibilité
+
 - Composants Radix UI (ARIA compliant)
 - Focus management
 - Keyboard navigation

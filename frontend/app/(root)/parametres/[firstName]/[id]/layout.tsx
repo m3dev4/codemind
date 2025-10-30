@@ -27,10 +27,7 @@ const ParametreLayout = ({ children }: { children: React.ReactNode }) => {
                   href={nav.href}
                   className={`
                     relative pb-4 px-1 font-medium text-sm whitespace-nowrap transition-colors
-                    ${isActive 
-                      ? 'text-secondary' 
-                      : 'text-muted-foreground hover:text-white'
-                    }
+                    ${isActive ? "text-secondary" : "text-muted-foreground hover:text-white"}
                   `}
                 >
                   {nav.name}
@@ -43,9 +40,7 @@ const ParametreLayout = ({ children }: { children: React.ReactNode }) => {
           </nav>
         </div>
 
-        <div className="animate-in fade-in duration-300 overflow-y-auto">
-          {children}
-        </div>
+        <div className="animate-in fade-in duration-300 overflow-y-auto">{children}</div>
       </div>
     </div>
   );

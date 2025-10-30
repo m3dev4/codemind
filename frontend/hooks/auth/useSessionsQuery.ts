@@ -46,9 +46,7 @@ export const useDeleteSession = () => {
 
   return useMutation<DeleteSessionResponse, Error, string>({
     mutationFn: async (sessionId: string) => {
-      const response = await instance.delete<DeleteSessionResponse>(
-        `/users/sessions/${sessionId}`
-      );
+      const response = await instance.delete<DeleteSessionResponse>(`/users/sessions/${sessionId}`);
       return response.data;
     },
     onSuccess: (data) => {
@@ -58,8 +56,7 @@ export const useDeleteSession = () => {
     },
     onError: (error: any) => {
       const message =
-        error.response?.data?.message ||
-        "Erreur lors de la suppression de la session";
+        error.response?.data?.message || "Erreur lors de la suppression de la session";
       toast.error(message);
     },
   });
@@ -74,9 +71,7 @@ export const useDeleteAllOtherSessions = () => {
   return useMutation<DeleteSessionResponse, Error, string[]>({
     mutationFn: async (sessionIds: string[]) => {
       // Supprimer toutes les sessions en parallèle
-      const deletePromises = sessionIds.map((id) =>
-        instance.delete(`/users/sessions/${id}`)
-      );
+      const deletePromises = sessionIds.map((id) => instance.delete(`/users/sessions/${id}`));
       await Promise.all(deletePromises);
       return {
         success: true,
@@ -88,9 +83,7 @@ export const useDeleteAllOtherSessions = () => {
       toast.success(data.message);
     },
     onError: (error: any) => {
-      const message =
-        error.response?.data?.message ||
-        "Erreur lors de la suppression des sessions";
+      const message = error.response?.data?.message || "Erreur lors de la suppression des sessions";
       toast.error(message);
     },
   });

@@ -40,14 +40,9 @@ export const DeleteSessionDialog: React.FC<DeleteSessionDialogProps> = ({
             {sessionInfo ? (
               <>
                 Vous êtes sur le point de supprimer la session depuis{" "}
-                <span className="font-medium text-[#A78BFA]">
-                  {sessionInfo.device}
-                </span>{" "}
-                à{" "}
-                <span className="font-medium text-[#A78BFA]">
-                  {sessionInfo.location}
-                </span>
-                . Cette action est irréversible et déconnectera cet appareil.
+                <span className="font-medium text-[#A78BFA]">{sessionInfo.device}</span> à{" "}
+                <span className="font-medium text-[#A78BFA]">{sessionInfo.location}</span>. Cette
+                action est irréversible et déconnectera cet appareil.
               </>
             ) : (
               "Cette action est irréversible et déconnectera cet appareil."
@@ -55,7 +50,12 @@ export const DeleteSessionDialog: React.FC<DeleteSessionDialogProps> = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting} className="bg-accent-foreground border-accent-foreground">Annuler</AlertDialogCancel>
+          <AlertDialogCancel
+            disabled={isDeleting}
+            className="bg-accent-foreground border-accent-foreground"
+          >
+            Annuler
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={(e: React.MouseEvent) => {
               e.preventDefault();

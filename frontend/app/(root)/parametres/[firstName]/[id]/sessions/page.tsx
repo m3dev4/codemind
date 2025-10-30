@@ -29,8 +29,8 @@ const SessionsPage = () => {
           Gestion des sessions
         </h1>
         <p className="text-muted-foreground">
-          Gérez vos sessions actives et sécurisez votre compte en déconnectant
-          les appareils que vous n'utilisez plus.
+          Gérez vos sessions actives et sécurisez votre compte en déconnectant les appareils que
+          vous n'utilisez plus.
         </p>
       </div>
 
@@ -45,10 +45,9 @@ const SessionsPage = () => {
             <div className="space-y-1">
               <h3 className="font-medium text-sm">À propos des sessions</h3>
               <p className="text-sm text-muted-foreground">
-                Chaque fois que vous vous connectez depuis un nouvel appareil ou
-                navigateur, une nouvelle session est créée. Vous pouvez supprimer
-                les sessions que vous ne reconnaissez pas pour sécuriser votre
-                compte.
+                Chaque fois que vous vous connectez depuis un nouvel appareil ou navigateur, une
+                nouvelle session est créée. Vous pouvez supprimer les sessions que vous ne
+                reconnaissez pas pour sécuriser votre compte.
               </p>
             </div>
           </div>
@@ -56,10 +55,8 @@ const SessionsPage = () => {
 
         {/* États de chargement et d'erreur */}
         {isLoading && <SessionsLoading />}
-        
-        {error && !isLoading && (
-          <SessionsError error={error} onRetry={() => refetch()} />
-        )}
+
+        {error && !isLoading && <SessionsError error={error} onRetry={() => refetch()} />}
 
         {/* Liste des sessions */}
         {!isLoading && !error && sessions && sessions.length > 0 && (
@@ -72,9 +69,7 @@ const SessionsPage = () => {
         )}
 
         {/* État vide */}
-        {!isLoading && !error && sessions && sessions.length === 0 && (
-          <EmptySessionsState />
-        )}
+        {!isLoading && !error && sessions && sessions.length === 0 && <EmptySessionsState />}
       </div>
     </div>
   );

@@ -9,10 +9,7 @@ interface SessionsErrorProps {
   onRetry?: () => void;
 }
 
-export const SessionsError: React.FC<SessionsErrorProps> = ({
-  error,
-  onRetry,
-}) => {
+export const SessionsError: React.FC<SessionsErrorProps> = ({ error, onRetry }) => {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
       <div className="relative mb-6">
@@ -22,9 +19,7 @@ export const SessionsError: React.FC<SessionsErrorProps> = ({
         </div>
       </div>
 
-      <h3 className="text-xl font-semibold mb-2">
-        Erreur lors du chargement
-      </h3>
+      <h3 className="text-xl font-semibold mb-2">Erreur lors du chargement</h3>
       <p className="text-muted-foreground text-center max-w-md mb-2">
         Une erreur s'est produite lors du chargement de vos sessions.
       </p>

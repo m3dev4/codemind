@@ -46,8 +46,8 @@ export const SessionsList: React.FC<SessionsListProps> = ({
     });
   };
 
-  const activeSessionsCount = sessions.filter((session) =>
-    new Date(session.expiresAt) > new Date()
+  const activeSessionsCount = sessions.filter(
+    (session) => new Date(session.expiresAt) > new Date(),
   ).length;
 
   return (
@@ -61,33 +61,21 @@ export const SessionsList: React.FC<SessionsListProps> = ({
           <div>
             <h3 className="font-semibold">Sessions actives</h3>
             <p className="text-sm text-muted-foreground">
-              {activeSessionsCount} session{activeSessionsCount > 1 ? "s" : ""}{" "}
-              active{activeSessionsCount > 1 ? "s" : ""} sur {sessions.length}{" "}
-              au total
+              {activeSessionsCount} session{activeSessionsCount > 1 ? "s" : ""} active
+              {activeSessionsCount > 1 ? "s" : ""} sur {sessions.length} au total
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           {onRefresh && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onRefresh}
-              disabled={isRefreshing}
-            >
-              <RefreshCw
-                className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`}
-              />
+            <Button variant="ghost" size="sm" onClick={onRefresh} disabled={isRefreshing}>
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
               Actualiser
             </Button>
           )}
           {otherSessions.length > 0 && (
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={() => setDeleteAllDialogOpen(true)}
-            >
+            <Button variant="destructive" size="sm" onClick={() => setDeleteAllDialogOpen(true)}>
               <Trash2 className="h-4 w-4 mr-2" />
               Supprimer les autres sessions
             </Button>
@@ -124,22 +112,17 @@ export const SessionsList: React.FC<SessionsListProps> = ({
       <AlertDialog open={deleteAllDialogOpen} onOpenChange={setDeleteAllDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              Supprimer toutes les autres sessions ?
-            </AlertDialogTitle>
+            <AlertDialogTitle>Supprimer toutes les autres sessions ?</AlertDialogTitle>
             <AlertDialogDescription>
               Vous êtes sur le point de supprimer{" "}
               <span className="font-semibold text-foreground">
                 {otherSessions.length} session{otherSessions.length > 1 ? "s" : ""}
               </span>
-              . Cette action déconnectera tous vos autres appareils et est
-              irréversible.
+              . Cette action déconnectera tous vos autres appareils et est irréversible.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteAllMutation.isPending}>
-              Annuler
-            </AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteAllMutation.isPending}>Annuler</AlertDialogCancel>
             <AlertDialogAction
               onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
@@ -148,11 +131,7 @@ export const SessionsList: React.FC<SessionsListProps> = ({
               disabled={deleteAllMutation.isPending}
               className="bg-destructive text-white hover:bg-destructive/90"
             >
-              {deleteAllMutation.isPending ? (
-                "Suppression en cours..."
-              ) : (
-                "Tout supprimer"
-              )}
+              {deleteAllMutation.isPending ? "Suppression en cours..." : "Tout supprimer"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

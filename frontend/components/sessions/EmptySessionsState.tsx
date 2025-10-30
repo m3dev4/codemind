@@ -15,8 +15,8 @@ export const EmptySessionsState: React.FC = () => {
 
       <h3 className="text-xl font-semibold mb-2">Aucune session active</h3>
       <p className="text-muted-foreground text-center max-w-md mb-6">
-        Vous n'avez actuellement aucune session active sur d'autres appareils.
-        Connectez-vous depuis un autre appareil pour voir les sessions ici.
+        Vous n'avez actuellement aucune session active sur d'autres appareils. Connectez-vous depuis
+        un autre appareil pour voir les sessions ici.
       </p>
 
       <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 px-4 py-2 rounded-lg">
