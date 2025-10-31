@@ -16,7 +16,7 @@ instance.interceptors.response.use(
     if (error.response?.status === 401) {
       // Éviter les boucles infinies - ne pas déconnecter si on est déjà sur la page de login
       const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
-      
+
       if (!currentPath.includes("/auth/sign-in")) {
         // Importer dynamiquement pour éviter les dépendances circulaires
         const { useAuthState } = await import("@/stores/auth/authState");
@@ -33,7 +33,7 @@ instance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default instance;

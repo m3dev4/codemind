@@ -16,8 +16,8 @@ export const SessionsError: React.FC<SessionsErrorProps> = ({ error, onRetry }) 
   const { logout } = useAuthState();
 
   // Vérifier si c'est une erreur 401 (session expirée)
-  const is401Error = error?.message?.includes("401") || 
-                     error?.message?.toLowerCase().includes("unauthorized");
+  const is401Error =
+    error?.message?.includes("401") || error?.message?.toLowerCase().includes("unauthorized");
 
   // Si c'est une erreur 401, l'intercepteur axios devrait déjà avoir géré la déconnexion
   // Mais on affiche un message approprié à l'utilisateur
