@@ -34,7 +34,14 @@ export const useSessions = () => {
       return response.data.data.sessions;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 2,
+    retry: (failureCount, error: any) => {
+      // Ne pas retry si c'est une erreur 401 (session expirée)
+      if (error?.response?.status === 401) {
+        return false;
+      }
+      // Retry 2 fois pour les autres erreurs
+      return failureCount < 2;
+    },
   });
 };
 

@@ -5,7 +5,7 @@ import {
   RegisterInput,
   registerSchema,
 } from "@/validations/auth/auth.validation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "@/hooks/auth/useAuth";
@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/errorMessage";
 import { Toaster } from "@/components/ui/sonner";
@@ -25,14 +25,26 @@ import { useOAuthCallback } from "@/hooks/auth/useOAuthCallback";
 import { useAuthRoute } from "@/hooks/auth/useProtectedRoute";
 import { AuthDebug } from "@/components/debug/AuthDebug";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 const SignInPage = () => {
   useOAuthCallback();
   useAuthRoute();
+  const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Détecter si la session a expiré
+  useEffect(() => {
+    const sessionExpired = searchParams.get("session_expired");
+    if (sessionExpired === "true") {
+      toast.error("Votre session a expiré. Veuillez vous reconnecter.", {
+        duration: 5000,
+      });
+    }
+  }, [searchParams]);
 
   const {
     register,
