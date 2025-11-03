@@ -25,6 +25,13 @@ const appConfig = () => {
     GITHUB_ID_CLIENT: getEnv("GITHUB_ID_CLIENT", ""),
     GITHUB_SECRET_KEY: getEnv("GITHUB_SECRET_KEY", ""),
     ARCJECT_SECRET_KEY: getEnv("ARCJECT_SECRET_KEY", ""),
+    R2_ACCOUNT_ID: getEnv("R2_ACCOUNT_ID", ""),
+    S3_PRIVATE_KEY: getEnv("S3_PRIVATE_KEY", ""),
+    MAX_GITHUB_REPO_SIZE_MB: getEnv("MAX_GITHUB_REPO_SIZE_MB", ""),
+    MAX_FILE_SIZE_MB: getEnv("MAX_FILE_SIZE_MB", ""),
+    R2_BUCKET_NAME: getEnv("R2_BUCKET_NAME", ""),
+    R2_PUBLIC_URL: getEnv("R2_PUBLIC_URL", ""),
+
   };
 };
 

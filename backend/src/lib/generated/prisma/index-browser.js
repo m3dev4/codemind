@@ -155,9 +155,32 @@ exports.Prisma.SessionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ProjectScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  description: 'description',
+  sourceType: 'sourceType',
+  githubUrl: 'githubUrl',
+  githubBranch: 'githubBranch',
+  storageUrl: 'storageUrl',
+  storageKey: 'storageKey',
+  fillSize: 'fillSize',
+  status: 'status',
+  analysisData: 'analysisData',
+  language: 'language',
+  createAt: 'createAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -169,14 +192,35 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
 exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN',
   USER: 'USER'
 };
 
+exports.SourceType = exports.$Enums.SourceType = {
+  GITHUB: 'GITHUB',
+  ZIP: 'ZIP'
+};
+
+exports.ProjectStatus = exports.$Enums.ProjectStatus = {
+  PENDING: 'PENDING',
+  PROGRESSING: 'PROGRESSING',
+  UPLOADED: 'UPLOADED',
+  ANALYZING: 'ANALYZING',
+  READY: 'READY',
+  FAILED: 'FAILED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
-  Session: 'Session'
+  Session: 'Session',
+  Project: 'Project'
 };
 
 /**

@@ -29,10 +29,11 @@ model User {
   googleId String? @unique
   githubId String? @unique
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  role Role @default(USER)
-  sessions Session[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  role      Role      @default(USER)
+  sessions  Session[]
+  projects  Project[]
 }
 
 model Session {
@@ -56,4 +57,38 @@ model Session {
 enum Role {
   ADMIN
   USER
+}
+
+model Project {
+  id           String        @id @default(cuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  description  String?
+  sourceType   SourceType
+  githubUrl    String?
+  githubBranch String?
+  storageUrl   String?
+  storageKey   String?
+  fileSize     BigInt?
+  status       ProjectStatus @default(PENDING)
+  analysisData Json?
+  language     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([userId])
+}
+
+enum SourceType {
+  GITHUB
+  ZIP
+}
+
+enum ProjectStatus {
+  PENDING
+  UPLOADED
+  ANALYZING
+  READY
+  FAILED
 }
