@@ -10,6 +10,7 @@
 ## 📋 Vue d'Ensemble
 
 Cette première phase s'est concentrée sur la mise en place d'un système d'authentification robuste, sécurisé et performant avec deux composants majeurs :
+
 1. **Arcjet** - Protection et sécurité des endpoints
 2. **Redis** - Cache et gestion des tokens
 
@@ -21,15 +22,16 @@ Cette première phase s'est concentrée sur la mise en place d'un système d'aut
 
 **Problèmes Identifiés et Corrigés :**
 
-| Bug | Description | Solution | Fichier |
-|-----|-------------|----------|---------|
-| Faute de frappe | `decison` → `decision` | Correction orthographe | `arcjet.middleware.ts` |
-| Erreur méthode | Appel `decision.reason.isBot()` sans vérifier `isDenied()` | Ajout de vérification conditionnelle | `arcjet.middleware.ts` |
-| Paramètres manquants | `aj.protect(req)` sans `requested` | Ajout `{ requested: 1 }` | `arcjet.middleware.ts` |
-| User-agent manquant | Test sans header `user-agent` | Ajout header dans mock | `arject.test.ts` |
-| Middleware incomplet | `arcjetProtectUser` ne passait pas `userId` | Correction du middleware | `arcjet.middleware.ts` |
+| Bug                  | Description                                                | Solution                             | Fichier                |
+| -------------------- | ---------------------------------------------------------- | ------------------------------------ | ---------------------- |
+| Faute de frappe      | `decison` → `decision`                                     | Correction orthographe               | `arcjet.middleware.ts` |
+| Erreur méthode       | Appel `decision.reason.isBot()` sans vérifier `isDenied()` | Ajout de vérification conditionnelle | `arcjet.middleware.ts` |
+| Paramètres manquants | `aj.protect(req)` sans `requested`                         | Ajout `{ requested: 1 }`             | `arcjet.middleware.ts` |
+| User-agent manquant  | Test sans header `user-agent`                              | Ajout header dans mock               | `arject.test.ts`       |
+| Middleware incomplet | `arcjetProtectUser` ne passait pas `userId`                | Correction du middleware             | `arcjet.middleware.ts` |
 
 **Fichiers Modifiés :**
+
 - ✅ `src/middlewares/arcjet.middleware.ts`
 - ✅ `src/test/arject.test.ts`
 - ✅ `src/config/env/env.Config.example.ts`
@@ -41,6 +43,7 @@ Cette première phase s'est concentrée sur la mise en place d'un système d'aut
 **Middlewares Créés :**
 
 #### 1. **arcjetProtect** (Global)
+
 ```typescript
 // Protection générale pour routes publiques
 // Rate limit: 100 req/15min
@@ -48,6 +51,7 @@ Cette première phase s'est concentrée sur la mise en place d'un système d'aut
 ```
 
 #### 2. **arcjetAuthProtect** (Authentification)
+
 ```typescript
 // Protection renforcée pour login/register
 // Rate limit: 5 req/15min
@@ -55,18 +59,21 @@ Cette première phase s'est concentrée sur la mise en place d'un système d'aut
 ```
 
 #### 3. **arcjetPublicProtect** (API Publique)
+
 ```typescript
 // Protection légère pour API publique
 // Rate limit: 200 req/15min
 ```
 
 #### 4. **arcjetProtectUser** (Par Utilisateur)
+
 ```typescript
 // Protection avec tracking par userId
 // Rate limit personnalisé par user
 ```
 
 **Fichiers Créés :**
+
 - ✅ `src/middlewares/arcjet.middleware.ts` (refactorisé)
 
 ---
@@ -86,6 +93,7 @@ Cette première phase s'est concentrée sur la mise en place d'un système d'aut
    - Patterns d'implémentation
 
 **Fichiers Créés :**
+
 - ✅ `src/middlewares/ARCJET_USAGE.md`
 - ✅ `src/routes/example.arcjet.routes.ts`
 
@@ -95,15 +103,16 @@ Cette première phase s'est concentrée sur la mise en place d'un système d'aut
 
 **Routes Protégées :**
 
-| Route | Middleware | Raison |
-|-------|-----------|--------|
-| `POST /auth/register` | `arcjetAuthProtect` | Prévention spam/brute force |
-| `POST /auth/login` | `arcjetAuthProtect` | Prévention brute force |
-| `GET /user/profile` | `arcjetProtect` | Protection standard |
-| `GET /user/sessions` | `arcjetProtect` | Protection standard |
-| `DELETE /user/sessions/:id` | `arcjetProtect` | Protection standard |
+| Route                       | Middleware          | Raison                      |
+| --------------------------- | ------------------- | --------------------------- |
+| `POST /auth/register`       | `arcjetAuthProtect` | Prévention spam/brute force |
+| `POST /auth/login`          | `arcjetAuthProtect` | Prévention brute force      |
+| `GET /user/profile`         | `arcjetProtect`     | Protection standard         |
+| `GET /user/sessions`        | `arcjetProtect`     | Protection standard         |
+| `DELETE /user/sessions/:id` | `arcjetProtect`     | Protection standard         |
 
 **Fichiers Modifiés :**
+
 - ✅ `src/routes/auth.routes.ts`
 - ✅ `src/routes/user.routes.ts`
 
@@ -112,11 +121,13 @@ Cette première phase s'est concentrée sur la mise en place d'un système d'aut
 ### ✅ Tâche 1.5 : Configuration et Variables d'Environnement
 
 **Variables Ajoutées :**
+
 ```env
 ARCJECT_SECRET_KEY=your_arcjet_api_key
 ```
 
 **Fichiers Modifiés :**
+
 - ✅ `src/config/env/env.Config.example.ts`
 
 ---
@@ -124,12 +135,14 @@ ARCJECT_SECRET_KEY=your_arcjet_api_key
 ### ✅ Tâche 1.6 : Tests et Validation
 
 **Tests Effectués :**
+
 - ✅ Test de rate limiting (15 requêtes simulées)
 - ✅ Test de bot detection (avec user-agent)
 - ✅ Test de shield protection
 - ✅ Validation des décisions Arcjet
 
 **Fichiers Modifiés :**
+
 - ✅ `src/test/arject.test.ts`
 
 ---
@@ -143,6 +156,7 @@ ARCJECT_SECRET_KEY=your_arcjet_api_key
 **Fonctionnalités Implémentées :**
 
 #### 1. Token Blacklist (Révocation JWT)
+
 ```typescript
 ✅ blacklistToken(jti, expiresIn)      // Révoquer un token
 ✅ isTokenBlacklisted(jti)             // Vérifier révocation
@@ -150,6 +164,7 @@ ARCJECT_SECRET_KEY=your_arcjet_api_key
 ```
 
 #### 2. Cache des Sessions
+
 ```typescript
 ✅ cacheSession(sessionId, data)       // Mettre en cache
 ✅ getSessionFromCache(sessionId)      // Récupérer depuis cache
@@ -158,6 +173,7 @@ ARCJECT_SECRET_KEY=your_arcjet_api_key
 ```
 
 #### 3. Cache des Utilisateurs
+
 ```typescript
 ✅ cacheUser(userId, userData)         // Mettre en cache
 ✅ getUserFromCache(userId)            // Récupérer depuis cache
@@ -166,6 +182,7 @@ ARCJECT_SECRET_KEY=your_arcjet_api_key
 ```
 
 #### 4. Codes de Vérification Email
+
 ```typescript
 ✅ storeVerificationCode(email, code)      // Stocker code
 ✅ verifyVerificationCode(email, code)     // Vérifier code
@@ -173,6 +190,7 @@ ARCJECT_SECRET_KEY=your_arcjet_api_key
 ```
 
 #### 5. Tokens de Reset Password
+
 ```typescript
 ✅ storeResetToken(email, token)           // Stocker token
 ✅ getEmailFromResetToken(token)           // Récupérer email
@@ -180,6 +198,7 @@ ARCJECT_SECRET_KEY=your_arcjet_api_key
 ```
 
 #### 6. Utilitaires
+
 ```typescript
 ✅ clearAllUserData(userId)                // Nettoyer toutes les données
 ✅ pingRedis()                             // Vérifier connexion
@@ -187,6 +206,7 @@ ARCJECT_SECRET_KEY=your_arcjet_api_key
 ```
 
 **Fichiers Créés :**
+
 - ✅ `src/services/redis.auth.service.ts`
 
 ---
@@ -196,6 +216,7 @@ ARCJECT_SECRET_KEY=your_arcjet_api_key
 **Modifications Apportées :**
 
 #### Avant
+
 ```typescript
 // Pas de vérification de révocation
 // Requête DB à chaque validation
@@ -203,6 +224,7 @@ const user = await prisma.user.findUnique({ where: { id: userId } });
 ```
 
 #### Après
+
 ```typescript
 // Vérification blacklist Redis
 const isBlacklisted = await isTokenBlacklisted(decoded.jti);
@@ -217,11 +239,13 @@ if (!user) {
 ```
 
 **Améliorations :**
+
 - ✅ Révocation immédiate des tokens
 - ✅ Performances 10-100x plus rapides
 - ✅ Réduction des requêtes DB
 
 **Fichiers Modifiés :**
+
 - ✅ `src/middlewares/authMiddleware.ts`
 
 ---
@@ -231,7 +255,9 @@ if (!user) {
 **Services Modifiés :**
 
 #### 1. `registerUser`
+
 **Changements :**
+
 - ✅ Code de vérification stocké dans Redis (au lieu de DB)
 - ✅ TTL automatique de 15 minutes
 - ✅ Suppression automatique après utilisation
@@ -246,7 +272,9 @@ await storeVerificationCode(email, verificationCode); // Redis
 ```
 
 #### 2. `verifyEmail`
+
 **Changements :**
+
 - ✅ Vérification depuis Redis
 - ✅ Auto-suppression après vérification
 - ✅ Pas de champs DB à nettoyer
@@ -260,7 +288,9 @@ const isValid = await verifyVerificationCode(email, code);
 ```
 
 #### 3. `loginUser`
+
 **Changements :**
+
 - ✅ Session mise en cache Redis (TTL: 7 jours)
 - ✅ Utilisateur mis en cache (TTL: 1 heure)
 - ✅ Récupération ultra-rapide
@@ -271,7 +301,9 @@ await cacheUser(user.id, userData);
 ```
 
 #### 4. `logoutUser`
+
 **Changements :**
+
 - ✅ Blacklist du token JWT
 - ✅ Suppression session (DB + Redis)
 - ✅ Invalidation cache utilisateur
@@ -283,7 +315,9 @@ await invalidateUserCache(userId);
 ```
 
 #### 5. `getMyProfile`
+
 **Changements :**
+
 - ✅ Cache-first strategy
 - ✅ Fallback DB si nécessaire
 - ✅ Mise en cache automatique
@@ -297,6 +331,7 @@ if (!user) {
 ```
 
 **Fichiers Modifiés :**
+
 - ✅ `src/services/auth.service.ts`
 - ✅ `src/controllers/auth.controller.ts`
 
@@ -315,6 +350,7 @@ if (!user) {
    - Tests et monitoring
 
 **Fichiers Créés :**
+
 - ✅ `REDIS_INTEGRATION.md`
 
 ---
@@ -323,36 +359,37 @@ if (!user) {
 
 ### Performances Améliorées
 
-| Opération | Avant (DB seule) | Après (Redis) | Amélioration |
-|-----------|------------------|---------------|--------------|
-| Vérification token | 50-100ms | 1-5ms | **10-100x** ⚡ |
-| Récupération profil | 30-80ms | 1-3ms | **30-80x** ⚡ |
-| Validation session | 40-90ms | 1-4ms | **40-90x** ⚡ |
-| Révocation token | ❌ Impossible | 2-5ms | **Nouveau** ✨ |
+| Opération           | Avant (DB seule) | Après (Redis) | Amélioration   |
+| ------------------- | ---------------- | ------------- | -------------- |
+| Vérification token  | 50-100ms         | 1-5ms         | **10-100x** ⚡ |
+| Récupération profil | 30-80ms          | 1-3ms         | **30-80x** ⚡  |
+| Validation session  | 40-90ms          | 1-4ms         | **40-90x** ⚡  |
+| Révocation token    | ❌ Impossible    | 2-5ms         | **Nouveau** ✨ |
 
 ### Sécurité Renforcée
 
-| Fonctionnalité | Avant | Après | Statut |
-|----------------|-------|-------|--------|
-| Rate limiting | ❌ Basique | ✅ Arcjet multi-niveaux | **Amélioré** |
-| Bot detection | ❌ Aucun | ✅ Arcjet Shield | **Nouveau** |
-| Révocation JWT | ❌ Impossible | ✅ Blacklist Redis | **Nouveau** |
-| Brute force protection | ⚠️ Partiel | ✅ Arcjet Auth | **Amélioré** |
+| Fonctionnalité         | Avant         | Après                   | Statut       |
+| ---------------------- | ------------- | ----------------------- | ------------ |
+| Rate limiting          | ❌ Basique    | ✅ Arcjet multi-niveaux | **Amélioré** |
+| Bot detection          | ❌ Aucun      | ✅ Arcjet Shield        | **Nouveau**  |
+| Révocation JWT         | ❌ Impossible | ✅ Blacklist Redis      | **Nouveau**  |
+| Brute force protection | ⚠️ Partiel    | ✅ Arcjet Auth          | **Amélioré** |
 
 ### Maintenance et Scalabilité
 
-| Aspect | Avant | Après | Bénéfice |
-|--------|-------|-------|----------|
-| Nettoyage tokens expirés | 🔧 Manuel | ✅ Auto (TTL) | Pas de cron jobs |
-| Requêtes DB | 📈 ~100/sec | 📉 ~10/sec | **Réduction 90%** |
-| Temps de réponse API | ⏱️ 100-200ms | ⚡ 10-20ms | **10x plus rapide** |
-| Coût infrastructure | 💰 Élevé | 💰 Réduit | Cache = moins de DB |
+| Aspect                   | Avant        | Après         | Bénéfice            |
+| ------------------------ | ------------ | ------------- | ------------------- |
+| Nettoyage tokens expirés | 🔧 Manuel    | ✅ Auto (TTL) | Pas de cron jobs    |
+| Requêtes DB              | 📈 ~100/sec  | 📉 ~10/sec    | **Réduction 90%**   |
+| Temps de réponse API     | ⏱️ 100-200ms | ⚡ 10-20ms    | **10x plus rapide** |
+| Coût infrastructure      | 💰 Élevé     | 💰 Réduit     | Cache = moins de DB |
 
 ---
 
 ## 📁 Fichiers - Récapitulatif
 
 ### Fichiers Créés (6)
+
 ```
 ✅ src/services/redis.auth.service.ts          # Service Redis complet
 ✅ src/middlewares/ARCJET_USAGE.md             # Doc Arcjet
@@ -362,6 +399,7 @@ if (!user) {
 ```
 
 ### Fichiers Modifiés (6)
+
 ```
 ✅ src/middlewares/arcjet.middleware.ts        # Corrections + nouveaux middlewares
 ✅ src/middlewares/authMiddleware.ts           # Intégration Redis
@@ -380,6 +418,7 @@ if (!user) {
 ## 🎯 Objectifs Atteints
 
 ### Sécurité
+
 - ✅ Protection multi-niveaux avec Arcjet
 - ✅ Rate limiting adaptatif par type de route
 - ✅ Bot detection et Shield protection
@@ -387,18 +426,21 @@ if (!user) {
 - ✅ Prévention brute force sur login/register
 
 ### Performance
+
 - ✅ Cache Redis pour utilisateurs et sessions
 - ✅ Réduction 90% des requêtes DB
 - ✅ Temps de réponse 10x plus rapide
 - ✅ Cache-first strategy avec fallback DB
 
 ### Maintenance
+
 - ✅ Auto-nettoyage avec TTL Redis
 - ✅ Pas de cron jobs nécessaires
 - ✅ Documentation complète
 - ✅ Tests validés
 
 ### Scalabilité
+
 - ✅ Architecture prête pour Redis Cluster
 - ✅ Support Redis Sentinel
 - ✅ Monitoring avec `getCacheStats()`
@@ -409,6 +451,7 @@ if (!user) {
 ## 🚀 Prêt pour Production
 
 **L'authentification est maintenant :**
+
 - ✅ **Sécurisée** - Multi-couches de protection
 - ✅ **Performante** - 10-100x plus rapide
 - ✅ **Scalable** - Redis + Arcjet
@@ -420,6 +463,7 @@ if (!user) {
 ## 📝 Notes Techniques
 
 ### Variables d'Environnement Requises
+
 ```env
 # Arcjet
 ARCJECT_SECRET_KEY=your_arcjet_api_key
@@ -432,6 +476,7 @@ REDIS_PORT=6379
 ```
 
 ### Dépendances
+
 ```json
 {
   "@arcjet/node": "^1.x.x",
@@ -441,6 +486,7 @@ REDIS_PORT=6379
 ```
 
 ### Structure Redis
+
 ```
 blacklist:token:{jti}       -> "revoked" (TTL: auto)
 session:{sessionId}         -> JSON (TTL: 7 jours)
@@ -456,6 +502,7 @@ reset:{resetToken}         -> "email" (TTL: 1 heure)
 **Partie 1 - Authentification & Sécurité : TERMINÉE ✅**
 
 Le système d'authentification de CodeMind est maintenant **enterprise-grade** avec :
+
 - Protection avancée contre les abus (Arcjet)
 - Performances exceptionnelles (Redis)
 - Sécurité renforcée (révocation tokens)
@@ -465,7 +512,7 @@ Le système d'authentification de CodeMind est maintenant **enterprise-grade** a
 
 ---
 
-*Document généré le : Octobre 2024*  
-*Projet : CodeMind Backend*  
-*Phase : Authentification & Sécurité*  
-*Statut : ✅ COMPLETED*
+_Document généré le : Octobre 2024_  
+_Projet : CodeMind Backend_  
+_Phase : Authentification & Sécurité_  
+_Statut : ✅ COMPLETED_

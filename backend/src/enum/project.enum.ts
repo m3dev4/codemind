@@ -1,4 +1,4 @@
 export enum SourceType {
-    GITHUB,
-    ZIP
+  GITHUB,
+  ZIP,
 }

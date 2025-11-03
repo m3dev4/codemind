@@ -1,4 +1,9 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { config } from "../config/env/env.Config.ts";
 import type { UploadResult } from "../types/project.ts";
 
@@ -56,6 +61,45 @@ class StorageService {
     } catch (error) {
       console.error("❌ [Storage Service] Erreur upload:", error);
       throw error;
+    }
+  }
+
+  async deleteFile(storageKey: string): Promise<void> {
+    try {
+      const command = new DeleteObjectCommand({
+        Bucket: this.bucketName,
+        Key: storageKey,
+      });
+
+      await this.s3client.send(command);
+      console.log(`✅ [Storage Service] Fichier supprimé: ${storageKey}`);
+    } catch (error) {
+      console.error("❌ [Storage Service] Erreur suppression:", error);
+      throw new Error("Erreur lors de la suppression du fichier");
+    }
+  }
+
+  async getFile(storageKey: string): Promise<Buffer> {
+    try {
+      const command = new GetObjectCommand({
+        Bucket: this.bucketName,
+        Key: storageKey,
+      });
+
+      const response = await this.s3client.send(command);
+      const chunks: Uint8Array[] = [];
+
+      if (response.Body) {
+        // @ts-ignore - Body est un stream
+        for await (const chunk of response.Body) {
+          chunks.push(chunk);
+        }
+      }
+
+      return Buffer.concat(chunks);
+    } catch (error) {
+      console.error("❌ [Storage Service] Erreur récupération:", error);
+      throw new Error("Erreur lors de la récupération du fichier");
     }
   }
 }

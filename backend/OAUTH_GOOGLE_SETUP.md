@@ -223,6 +223,7 @@ Ce endpoint est appelé automatiquement par Google après l'authentification.
 4. Vérifier la redirection vers le dashboard
 
 5. Vérifier dans la base de données :
+
    ```bash
    npx prisma studio
    ```

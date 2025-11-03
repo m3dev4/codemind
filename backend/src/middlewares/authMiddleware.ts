@@ -41,16 +41,16 @@ const verifyToken = async (token: string, jwtSecret: string): Promise<JwtPayload
 
     // Vérifier l'existence de l'utilisateur (avec cache Redis)
     let user = await getUserFromCache(decoded.userId);
-    
+
     if (!user) {
       // Si pas en cache, chercher dans la DB et mettre en cache
       user = await prisma.user.findUnique({
         where: { id: decoded.userId },
-        select: { 
-          id: true, 
-          email: true, 
+        select: {
+          id: true,
+          email: true,
           role: true,
-          emailVerified: true 
+          emailVerified: true,
         },
       });
 
