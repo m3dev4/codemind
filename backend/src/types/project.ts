@@ -26,3 +26,10 @@ export interface ProjectResponse {
   createdAt: Date;
   updatedAt: Date;
 }
+
+
+export interface UploadResult {
+    storageKey: string
+    storageUrl: string
+    fileSize: number
+}

@@ -31,7 +31,8 @@ const appConfig = () => {
     MAX_FILE_SIZE_MB: getEnv("MAX_FILE_SIZE_MB", ""),
     R2_BUCKET_NAME: getEnv("R2_BUCKET_NAME", ""),
     R2_PUBLIC_URL: getEnv("R2_PUBLIC_URL", ""),
-
+    R2_ACCESS_KEY_ID: getEnv("R2_ACCESS_KEY_ID", ""),
+    R2_ACCESS_KEY_SECRET: getEnv("R2_ACCESS_KEY_SECRET", ""),
   };
 };
 
