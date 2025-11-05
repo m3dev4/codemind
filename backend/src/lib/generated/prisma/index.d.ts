@@ -51,7 +51,6 @@ export type SourceType = (typeof SourceType)[keyof typeof SourceType]
 
 export const ProjectStatus: {
   PENDING: 'PENDING',
-  PROGRESSING: 'PROGRESSING',
   UPLOADED: 'UPLOADED',
   ANALYZING: 'ANALYZING',
   READY: 'READY',
@@ -279,8 +278,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.17.1
-   * Query Engine version: 272a37d34178c2894197e17273bf937f25acdeac
+   * Prisma Client JS version: 6.18.0
+   * Query Engine version: 34b5a692b7bd79939a9a2c3ef97d816e749cda2f
    */
   export type PrismaVersion = {
     client: string
@@ -293,6 +292,7 @@ export namespace Prisma {
    */
 
 
+  export import Bytes = runtime.Bytes
   export import JsonObject = runtime.JsonObject
   export import JsonArray = runtime.JsonArray
   export import JsonValue = runtime.JsonValue
@@ -3542,11 +3542,11 @@ export namespace Prisma {
   }
 
   export type ProjectAvgAggregateOutputType = {
-    fillSize: number | null
+    fileSize: number | null
   }
 
   export type ProjectSumAggregateOutputType = {
-    fillSize: bigint | null
+    fileSize: bigint | null
   }
 
   export type ProjectMinAggregateOutputType = {
@@ -3559,10 +3559,10 @@ export namespace Prisma {
     githubBranch: string | null
     storageUrl: string | null
     storageKey: string | null
-    fillSize: bigint | null
+    fileSize: bigint | null
     status: $Enums.ProjectStatus | null
     language: string | null
-    createAt: Date | null
+    createdAt: Date | null
     updatedAt: Date | null
   }
 
@@ -3576,10 +3576,10 @@ export namespace Prisma {
     githubBranch: string | null
     storageUrl: string | null
     storageKey: string | null
-    fillSize: bigint | null
+    fileSize: bigint | null
     status: $Enums.ProjectStatus | null
     language: string | null
-    createAt: Date | null
+    createdAt: Date | null
     updatedAt: Date | null
   }
 
@@ -3593,22 +3593,22 @@ export namespace Prisma {
     githubBranch: number
     storageUrl: number
     storageKey: number
-    fillSize: number
+    fileSize: number
     status: number
     analysisData: number
     language: number
-    createAt: number
+    createdAt: number
     updatedAt: number
     _all: number
   }
 
 
   export type ProjectAvgAggregateInputType = {
-    fillSize?: true
+    fileSize?: true
   }
 
   export type ProjectSumAggregateInputType = {
-    fillSize?: true
+    fileSize?: true
   }
 
   export type ProjectMinAggregateInputType = {
@@ -3621,10 +3621,10 @@ export namespace Prisma {
     githubBranch?: true
     storageUrl?: true
     storageKey?: true
-    fillSize?: true
+    fileSize?: true
     status?: true
     language?: true
-    createAt?: true
+    createdAt?: true
     updatedAt?: true
   }
 
@@ -3638,10 +3638,10 @@ export namespace Prisma {
     githubBranch?: true
     storageUrl?: true
     storageKey?: true
-    fillSize?: true
+    fileSize?: true
     status?: true
     language?: true
-    createAt?: true
+    createdAt?: true
     updatedAt?: true
   }
 
@@ -3655,11 +3655,11 @@ export namespace Prisma {
     githubBranch?: true
     storageUrl?: true
     storageKey?: true
-    fillSize?: true
+    fileSize?: true
     status?: true
     analysisData?: true
     language?: true
-    createAt?: true
+    createdAt?: true
     updatedAt?: true
     _all?: true
   }
@@ -3760,11 +3760,11 @@ export namespace Prisma {
     githubBranch: string | null
     storageUrl: string | null
     storageKey: string | null
-    fillSize: bigint | null
+    fileSize: bigint | null
     status: $Enums.ProjectStatus
     analysisData: JsonValue | null
-    language: string
-    createAt: Date
+    language: string | null
+    createdAt: Date
     updatedAt: Date
     _count: ProjectCountAggregateOutputType | null
     _avg: ProjectAvgAggregateOutputType | null
@@ -3797,11 +3797,11 @@ export namespace Prisma {
     githubBranch?: boolean
     storageUrl?: boolean
     storageKey?: boolean
-    fillSize?: boolean
+    fileSize?: boolean
     status?: boolean
     analysisData?: boolean
     language?: boolean
-    createAt?: boolean
+    createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
@@ -3816,11 +3816,11 @@ export namespace Prisma {
     githubBranch?: boolean
     storageUrl?: boolean
     storageKey?: boolean
-    fillSize?: boolean
+    fileSize?: boolean
     status?: boolean
     analysisData?: boolean
     language?: boolean
-    createAt?: boolean
+    createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
@@ -3835,11 +3835,11 @@ export namespace Prisma {
     githubBranch?: boolean
     storageUrl?: boolean
     storageKey?: boolean
-    fillSize?: boolean
+    fileSize?: boolean
     status?: boolean
     analysisData?: boolean
     language?: boolean
-    createAt?: boolean
+    createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
@@ -3854,15 +3854,15 @@ export namespace Prisma {
     githubBranch?: boolean
     storageUrl?: boolean
     storageKey?: boolean
-    fillSize?: boolean
+    fileSize?: boolean
     status?: boolean
     analysisData?: boolean
     language?: boolean
-    createAt?: boolean
+    createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "description" | "sourceType" | "githubUrl" | "githubBranch" | "storageUrl" | "storageKey" | "fillSize" | "status" | "analysisData" | "language" | "createAt" | "updatedAt", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "description" | "sourceType" | "githubUrl" | "githubBranch" | "storageUrl" | "storageKey" | "fileSize" | "status" | "analysisData" | "language" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -3888,11 +3888,11 @@ export namespace Prisma {
       githubBranch: string | null
       storageUrl: string | null
       storageKey: string | null
-      fillSize: bigint | null
+      fileSize: bigint | null
       status: $Enums.ProjectStatus
       analysisData: Prisma.JsonValue | null
-      language: string
-      createAt: Date
+      language: string | null
+      createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["project"]>
     composites: {}
@@ -4327,11 +4327,11 @@ export namespace Prisma {
     readonly githubBranch: FieldRef<"Project", 'String'>
     readonly storageUrl: FieldRef<"Project", 'String'>
     readonly storageKey: FieldRef<"Project", 'String'>
-    readonly fillSize: FieldRef<"Project", 'BigInt'>
+    readonly fileSize: FieldRef<"Project", 'BigInt'>
     readonly status: FieldRef<"Project", 'ProjectStatus'>
     readonly analysisData: FieldRef<"Project", 'Json'>
     readonly language: FieldRef<"Project", 'String'>
-    readonly createAt: FieldRef<"Project", 'DateTime'>
+    readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
   }
     
@@ -4812,11 +4812,11 @@ export namespace Prisma {
     githubBranch: 'githubBranch',
     storageUrl: 'storageUrl',
     storageKey: 'storageKey',
-    fillSize: 'fillSize',
+    fileSize: 'fileSize',
     status: 'status',
     analysisData: 'analysisData',
     language: 'language',
-    createAt: 'createAt',
+    createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
@@ -5226,11 +5226,11 @@ export namespace Prisma {
     githubBranch?: StringNullableFilter<"Project"> | string | null
     storageUrl?: StringNullableFilter<"Project"> | string | null
     storageKey?: StringNullableFilter<"Project"> | string | null
-    fillSize?: BigIntNullableFilter<"Project"> | bigint | number | null
+    fileSize?: BigIntNullableFilter<"Project"> | bigint | number | null
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
     analysisData?: JsonNullableFilter<"Project">
-    language?: StringFilter<"Project"> | string
-    createAt?: DateTimeFilter<"Project"> | Date | string
+    language?: StringNullableFilter<"Project"> | string | null
+    createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -5245,11 +5245,11 @@ export namespace Prisma {
     githubBranch?: SortOrderInput | SortOrder
     storageUrl?: SortOrderInput | SortOrder
     storageKey?: SortOrderInput | SortOrder
-    fillSize?: SortOrderInput | SortOrder
+    fileSize?: SortOrderInput | SortOrder
     status?: SortOrder
     analysisData?: SortOrderInput | SortOrder
-    language?: SortOrder
-    createAt?: SortOrder
+    language?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
   }
@@ -5267,11 +5267,11 @@ export namespace Prisma {
     githubBranch?: StringNullableFilter<"Project"> | string | null
     storageUrl?: StringNullableFilter<"Project"> | string | null
     storageKey?: StringNullableFilter<"Project"> | string | null
-    fillSize?: BigIntNullableFilter<"Project"> | bigint | number | null
+    fileSize?: BigIntNullableFilter<"Project"> | bigint | number | null
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
     analysisData?: JsonNullableFilter<"Project">
-    language?: StringFilter<"Project"> | string
-    createAt?: DateTimeFilter<"Project"> | Date | string
+    language?: StringNullableFilter<"Project"> | string | null
+    createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -5286,11 +5286,11 @@ export namespace Prisma {
     githubBranch?: SortOrderInput | SortOrder
     storageUrl?: SortOrderInput | SortOrder
     storageKey?: SortOrderInput | SortOrder
-    fillSize?: SortOrderInput | SortOrder
+    fileSize?: SortOrderInput | SortOrder
     status?: SortOrder
     analysisData?: SortOrderInput | SortOrder
-    language?: SortOrder
-    createAt?: SortOrder
+    language?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _avg?: ProjectAvgOrderByAggregateInput
@@ -5312,11 +5312,11 @@ export namespace Prisma {
     githubBranch?: StringNullableWithAggregatesFilter<"Project"> | string | null
     storageUrl?: StringNullableWithAggregatesFilter<"Project"> | string | null
     storageKey?: StringNullableWithAggregatesFilter<"Project"> | string | null
-    fillSize?: BigIntNullableWithAggregatesFilter<"Project"> | bigint | number | null
+    fileSize?: BigIntNullableWithAggregatesFilter<"Project"> | bigint | number | null
     status?: EnumProjectStatusWithAggregatesFilter<"Project"> | $Enums.ProjectStatus
     analysisData?: JsonNullableWithAggregatesFilter<"Project">
-    language?: StringWithAggregatesFilter<"Project"> | string
-    createAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
+    language?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
   }
 
@@ -5581,11 +5581,11 @@ export namespace Prisma {
     githubBranch?: string | null
     storageUrl?: string | null
     storageKey?: string | null
-    fillSize?: bigint | number | null
+    fileSize?: bigint | number | null
     status?: $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language: string
-    createAt?: Date | string
+    language?: string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutProjectsInput
   }
@@ -5600,11 +5600,11 @@ export namespace Prisma {
     githubBranch?: string | null
     storageUrl?: string | null
     storageKey?: string | null
-    fillSize?: bigint | number | null
+    fileSize?: bigint | number | null
     status?: $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language: string
-    createAt?: Date | string
+    language?: string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -5617,11 +5617,11 @@ export namespace Prisma {
     githubBranch?: NullableStringFieldUpdateOperationsInput | string | null
     storageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     storageKey?: NullableStringFieldUpdateOperationsInput | string | null
-    fillSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    fileSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language?: StringFieldUpdateOperationsInput | string
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProjectsNestedInput
   }
@@ -5636,11 +5636,11 @@ export namespace Prisma {
     githubBranch?: NullableStringFieldUpdateOperationsInput | string | null
     storageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     storageKey?: NullableStringFieldUpdateOperationsInput | string | null
-    fillSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    fileSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language?: StringFieldUpdateOperationsInput | string
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -5654,11 +5654,11 @@ export namespace Prisma {
     githubBranch?: string | null
     storageUrl?: string | null
     storageKey?: string | null
-    fillSize?: bigint | number | null
+    fileSize?: bigint | number | null
     status?: $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language: string
-    createAt?: Date | string
+    language?: string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -5671,11 +5671,11 @@ export namespace Prisma {
     githubBranch?: NullableStringFieldUpdateOperationsInput | string | null
     storageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     storageKey?: NullableStringFieldUpdateOperationsInput | string | null
-    fillSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    fileSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language?: StringFieldUpdateOperationsInput | string
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -5689,11 +5689,11 @@ export namespace Prisma {
     githubBranch?: NullableStringFieldUpdateOperationsInput | string | null
     storageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     storageKey?: NullableStringFieldUpdateOperationsInput | string | null
-    fillSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    fileSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language?: StringFieldUpdateOperationsInput | string
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6011,16 +6011,16 @@ export namespace Prisma {
     githubBranch?: SortOrder
     storageUrl?: SortOrder
     storageKey?: SortOrder
-    fillSize?: SortOrder
+    fileSize?: SortOrder
     status?: SortOrder
     analysisData?: SortOrder
     language?: SortOrder
-    createAt?: SortOrder
+    createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ProjectAvgOrderByAggregateInput = {
-    fillSize?: SortOrder
+    fileSize?: SortOrder
   }
 
   export type ProjectMaxOrderByAggregateInput = {
@@ -6033,10 +6033,10 @@ export namespace Prisma {
     githubBranch?: SortOrder
     storageUrl?: SortOrder
     storageKey?: SortOrder
-    fillSize?: SortOrder
+    fileSize?: SortOrder
     status?: SortOrder
     language?: SortOrder
-    createAt?: SortOrder
+    createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -6050,15 +6050,15 @@ export namespace Prisma {
     githubBranch?: SortOrder
     storageUrl?: SortOrder
     storageKey?: SortOrder
-    fillSize?: SortOrder
+    fileSize?: SortOrder
     status?: SortOrder
     language?: SortOrder
-    createAt?: SortOrder
+    createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ProjectSumOrderByAggregateInput = {
-    fillSize?: SortOrder
+    fileSize?: SortOrder
   }
 
   export type EnumSourceTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -6552,11 +6552,11 @@ export namespace Prisma {
     githubBranch?: string | null
     storageUrl?: string | null
     storageKey?: string | null
-    fillSize?: bigint | number | null
+    fileSize?: bigint | number | null
     status?: $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language: string
-    createAt?: Date | string
+    language?: string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -6569,11 +6569,11 @@ export namespace Prisma {
     githubBranch?: string | null
     storageUrl?: string | null
     storageKey?: string | null
-    fillSize?: bigint | number | null
+    fileSize?: bigint | number | null
     status?: $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language: string
-    createAt?: Date | string
+    language?: string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -6650,11 +6650,11 @@ export namespace Prisma {
     githubBranch?: StringNullableFilter<"Project"> | string | null
     storageUrl?: StringNullableFilter<"Project"> | string | null
     storageKey?: StringNullableFilter<"Project"> | string | null
-    fillSize?: BigIntNullableFilter<"Project"> | bigint | number | null
+    fileSize?: BigIntNullableFilter<"Project"> | bigint | number | null
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
     analysisData?: JsonNullableFilter<"Project">
-    language?: StringFilter<"Project"> | string
-    createAt?: DateTimeFilter<"Project"> | Date | string
+    language?: StringNullableFilter<"Project"> | string | null
+    createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
   }
 
@@ -6881,11 +6881,11 @@ export namespace Prisma {
     githubBranch?: string | null
     storageUrl?: string | null
     storageKey?: string | null
-    fillSize?: bigint | number | null
+    fileSize?: bigint | number | null
     status?: $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language: string
-    createAt?: Date | string
+    language?: string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -6940,11 +6940,11 @@ export namespace Prisma {
     githubBranch?: NullableStringFieldUpdateOperationsInput | string | null
     storageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     storageKey?: NullableStringFieldUpdateOperationsInput | string | null
-    fillSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    fileSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language?: StringFieldUpdateOperationsInput | string
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6957,11 +6957,11 @@ export namespace Prisma {
     githubBranch?: NullableStringFieldUpdateOperationsInput | string | null
     storageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     storageKey?: NullableStringFieldUpdateOperationsInput | string | null
-    fillSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    fileSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language?: StringFieldUpdateOperationsInput | string
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6974,11 +6974,11 @@ export namespace Prisma {
     githubBranch?: NullableStringFieldUpdateOperationsInput | string | null
     storageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     storageKey?: NullableStringFieldUpdateOperationsInput | string | null
-    fillSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    fileSize?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     analysisData?: NullableJsonNullValueInput | InputJsonValue
-    language?: StringFieldUpdateOperationsInput | string
-    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

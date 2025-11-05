@@ -10,11 +10,7 @@ export const createProjectFromZipSchema = z.object({
     .max(100, "Le nom est trop long")
     .trim(),
 
-  description: z
-    .string()
-    .max(500, "La description est trop longue")
-    .optional()
-    .nullable(),
+  description: z.string().max(500, "La description est trop longue").optional().nullable(),
 });
 
 /**
@@ -27,18 +23,14 @@ export const createProjectFromGitHubSchema = z.object({
     .max(100, "Le nom est trop long")
     .trim(),
 
-  description: z
-    .string()
-    .max(500, "La description est trop longue")
-    .optional()
-    .nullable(),
+  description: z.string().max(500, "La description est trop longue").optional().nullable(),
 
   githubUrl: z
     .string({ message: "L'URL GitHub est requise" })
     .url("URL GitHub invalide")
     .regex(
       /^https:\/\/github\.com\/[\w-]+\/[\w.-]+/,
-      "URL GitHub invalide. Format attendu: https://github.com/user/repo"
+      "URL GitHub invalide. Format attendu: https://github.com/user/repo",
     ),
 
   githubBranch: z

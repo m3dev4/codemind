@@ -8,7 +8,7 @@ import projectRoutes from "./project/project.routes.ts";
 
 const router: Router = Router();
 
-console.log("Routes loading...")
+console.log("Routes loading...");
 
 // Routes d'authentification
 router.use("/auth", authRoutes);

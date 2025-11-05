@@ -4,7 +4,6 @@ import {
   createProjectFromZipSchema,
 } from "../validations/project.validation.ts";
 import { projectService } from "../services/project.service.ts";
-import { z } from "zod";
 import "../middlewares/authMiddleware.ts"; // Import pour la déclaration globale Express.Request.user
 
 console.log("✅ Project controller loaded successfully");
@@ -22,7 +21,7 @@ class ProjectController {
 
       const validatedData = createProjectFromZipSchema.parse(req.body);
 
-      const userId = req.user?.userId;
+      const userId = req.user?.id;
 
       if (!userId) {
         res.status(401).json({

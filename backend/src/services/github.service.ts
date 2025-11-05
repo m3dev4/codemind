@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
-import simpleGit from "simple-git";
+import os from "os";
+import { simpleGit } from "simple-git";
 import { config } from "../config/env/env.Config.ts";
 import AdmZip from "adm-zip";
 
@@ -17,7 +18,8 @@ class GithubSerice {
     githubUrl: string,
     branch: string = "main",
   ): Promise<{ buffer: Buffer; repoName: string }> {
-    const tempDir = path.join(process.cwd(), "temp", `repo-${Date.now()}`);
+    // Utiliser le dossier temporaire du système au lieu du projet
+    const tempDir = path.join(os.tmpdir(), "codemind-repos", `repo-${Date.now()}`);
     try {
       //Creer le dossier temporaire
       await fs.mkdir(tempDir, { recursive: true });
@@ -25,11 +27,29 @@ class GithubSerice {
       console.log(`📥 [GitHub Service] Clonage de ${githubUrl}...`);
 
       const git = simpleGit();
-      await git.clone(githubUrl, tempDir, {
-        "--depth": 1,
-        "--branch": branch,
-        "--single-branch": null,
-      });
+
+      // Tenter de cloner avec la branche spécifiée
+      try {
+        await git.clone(githubUrl, tempDir, {
+          "--depth": 1,
+          "--branch": branch,
+          "--single-branch": null,
+        });
+      } catch (error: any) {
+        // Si la branche n'existe pas, essayer avec 'master' ou sans spécifier de branche
+        console.log(
+          `⚠️ [GitHub Service] Branche '${branch}' introuvable, tentative avec la branche par défaut...`,
+        );
+
+        // Nettoyer le dossier si le clone a partiellement échoué
+        await fs.rm(tempDir, { recursive: true, force: true });
+        await fs.mkdir(tempDir, { recursive: true });
+
+        // Cloner sans spécifier de branche (utilisera la branche par défaut du repo)
+        await git.clone(githubUrl, tempDir, {
+          "--depth": 1,
+        });
+      }
 
       //Extract le nom du repo
       const repoName = githubUrl.split("/").pop()?.replace(".git", "") || "repo";

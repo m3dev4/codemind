@@ -15,14 +15,14 @@ class StorageService {
   constructor() {
     this.s3client = new S3Client({
       region: "auto",
-      endpoint: `http://${config.S3_PRIVATE_KEY}`,
+      endpoint: `https://${config.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
       credentials: {
         accessKeyId: config.R2_ACCESS_KEY_ID,
         secretAccessKey: config.R2_ACCESS_KEY_SECRET,
       },
     });
     this.bucketName = config.R2_BUCKET_NAME;
-    this.publicurl = config.R2_PUBLIC_URL;
+    this.publicurl = config.R2_PUBLIC_URL || "";
   }
 
   /**

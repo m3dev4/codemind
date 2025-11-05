@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.17.1
- * Query Engine version: 272a37d34178c2894197e17273bf937f25acdeac
+ * Prisma Client JS version: 6.18.0
+ * Query Engine version: 34b5a692b7bd79939a9a2c3ef97d816e749cda2f
  */
 Prisma.prismaVersion = {
-  client: "6.17.1",
-  engine: "272a37d34178c2894197e17273bf937f25acdeac"
+  client: "6.18.0",
+  engine: "34b5a692b7bd79939a9a2c3ef97d816e749cda2f"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -165,11 +165,11 @@ exports.Prisma.ProjectScalarFieldEnum = {
   githubBranch: 'githubBranch',
   storageUrl: 'storageUrl',
   storageKey: 'storageKey',
-  fillSize: 'fillSize',
+  fileSize: 'fileSize',
   status: 'status',
   analysisData: 'analysisData',
   language: 'language',
-  createAt: 'createAt',
+  createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
@@ -210,7 +210,6 @@ exports.SourceType = exports.$Enums.SourceType = {
 
 exports.ProjectStatus = exports.$Enums.ProjectStatus = {
   PENDING: 'PENDING',
-  PROGRESSING: 'PROGRESSING',
   UPLOADED: 'UPLOADED',
   ANALYZING: 'ANALYZING',
   READY: 'READY',

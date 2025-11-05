@@ -12,9 +12,6 @@ import routes from "./routes/index.ts";
 import { testEmailConnection } from "./services/email.service.ts";
 import "./config/Oauth2/passport.ts"; // Initialiser passport
 
-
-
-
 // Note: Arcjet middlewares sont appliqués au niveau des routes individuelles
 // pour un contrôle plus granulaire de la protection
 
@@ -38,7 +35,7 @@ app.use(
 );
 
 // Logging
-app.use(morgan("combined"))
+app.use(morgan("combined"));
 
 // Middleware de debug global
 app.use((req: Request, res: Response, next: any) => {
@@ -51,7 +48,6 @@ app.use(passport.initialize());
 
 // Connexion Redis
 await connectRedis();
-
 
 // Route racine
 app.get("/", (req: Request, res: Response) => {
@@ -68,7 +64,7 @@ app.get("/test-api", (req: Request, res: Response) => {
   console.log("✅ Route /test-api appelée");
   res.json({
     success: true,
-    message: "Ce route marche"
+    message: "Ce route marche",
   });
 });
 

@@ -36,11 +36,11 @@ class ProjectService {
         data: {
           userId,
           name: data.name,
-          description: data.description,
+          description: data.description || "",
           sourceType: "ZIP",
           storageUrl: uploadResult.storageUrl,
           storageKey: uploadResult.storageKey,
-          fillSize: BigInt(uploadResult.fileSize),
+          fileSize: BigInt(uploadResult.fileSize),
           status: "UPLOADED",
           language: "",
         },
@@ -72,12 +72,11 @@ class ProjectService {
         data: {
           userId,
           name: data.name,
-          description: data.description,
+          description: data.description || null,
           sourceType: "GITHUB",
           githubUrl: data.githubUrl,
-          githubBranch: data.githubBranch,
-          status: "PENDING",
-          language: "",
+          githubBranch: data.githubBranch || "main",
+          status: "UPLOADED",
         },
       });
 
@@ -101,7 +100,7 @@ class ProjectService {
           data: {
             storageUrl: uploadResult.storageUrl,
             storageKey: uploadResult.storageKey,
-            fillSize: BigInt(uploadResult.fileSize),
+            fileSize: BigInt(uploadResult.fileSize),
             status: "UPLOADED",
           },
         });
@@ -110,6 +109,12 @@ class ProjectService {
 
         return project;
       } catch (error) {
+        // Mettre à jour le statut en cas d'erreur
+        await prisma.project.update({
+          where: { id: tempProject.id },
+          data: { status: "FAILED" },
+        });
+
         console.error(`❌ [Project Service] Erreur lors de la creation du projet: ${error}`);
         throw error;
       }
@@ -124,11 +129,11 @@ class ProjectService {
    * @param userId
    * @returns
    */
-  async getUserProjects(userId: string): Promise<ProjectResponse> {
+  async getUserProjects(userId: string): Promise<ProjectResponse[]> {
     try {
       const projects = await prisma.project.findMany({
         where: { userId },
-        orderBy: { createAt: "desc" },
+        orderBy: { createdAt: "desc" },
       });
 
       if (!projects) {
@@ -194,6 +199,5 @@ class ProjectService {
     }
   }
 }
-
 
 export const projectService = new ProjectService();

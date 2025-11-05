@@ -16,12 +16,14 @@ export interface CreateProjectFromGuthubDto {
 export interface ProjectResponse {
   id: string;
   name: string;
-  description?: string;
+  description?: string | null;
   sourceType: SourceType;
   githubUrl?: string | null;
   githubBranch?: string | null;
   fileSize: bigint | null;
   status: ProjectStatus;
+  storageKey?: string | null;
+  storageUrl?: string | null;
   language: string | null;
   createdAt: Date;
   updatedAt: Date;

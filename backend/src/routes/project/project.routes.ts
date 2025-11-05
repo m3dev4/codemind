@@ -5,11 +5,10 @@ import { projectController } from "../../controllers/project.controller.ts";
 
 const router: Router = express.Router();
 
-
-console.log("Project routes loading...")
+console.log("Project routes loading...");
 
 router.get("/test", (req, res) => {
-  console.log("Project routes test...")
+  console.log("Project routes test...");
   res.json({
     success: true,
     message: "Test successful",
@@ -17,7 +16,6 @@ router.get("/test", (req, res) => {
 });
 
 router.use(isAuthenticated);
-
 
 router.post(
   "/upload",
