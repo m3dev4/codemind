@@ -87,6 +87,7 @@ enum SourceType {
 
 enum ProjectStatus {
   PENDING
+  UPLOADING
   UPLOADED
   ANALYZING
   READY

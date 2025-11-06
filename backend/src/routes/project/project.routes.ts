@@ -27,6 +27,9 @@ router.post("/github", projectController.createFromGithub.bind(projectController
 
 router.get("/", projectController.getuserProjects.bind(projectController));
 
+// Route pour vérifier le statut d'un job (DOIT être avant /:id)
+router.get("/job/:jobId", projectController.getJobStatus.bind(projectController));
+
 router.get("/:id", projectController.getProjectById.bind(projectController));
 
 router.delete("/:id", projectController.deleteProject.bind(projectController));

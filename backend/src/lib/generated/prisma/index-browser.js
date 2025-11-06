@@ -210,6 +210,7 @@ exports.SourceType = exports.$Enums.SourceType = {
 
 exports.ProjectStatus = exports.$Enums.ProjectStatus = {
   PENDING: 'PENDING',
+  UPLOADING: 'UPLOADING',
   UPLOADED: 'UPLOADED',
   ANALYZING: 'ANALYZING',
   READY: 'READY',

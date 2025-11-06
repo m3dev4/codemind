@@ -51,6 +51,7 @@ export type SourceType = (typeof SourceType)[keyof typeof SourceType]
 
 export const ProjectStatus: {
   PENDING: 'PENDING',
+  UPLOADING: 'UPLOADING',
   UPLOADED: 'UPLOADED',
   ANALYZING: 'ANALYZING',
   READY: 'READY',
