@@ -60,24 +60,46 @@ enum Role {
 }
 
 model Project {
-  id           String        @id @default(cuid())
-  userId       String
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name         String
-  description  String?
-  sourceType   SourceType
-  githubUrl    String?
-  githubBranch String?
-  storageUrl   String?
-  storageKey   String?
-  fileSize     BigInt?
-  status       ProjectStatus @default(PENDING)
-  analysisData Json?
-  language     String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id            String         @id @default(cuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  description   String?
+  sourceType    SourceType
+  githubUrl     String?
+  githubBranch  String?
+  storageUrl    String?
+  storageKey    String?
+  fileSize      BigInt?
+  status        ProjectStatus  @default(PENDING)
+  manifest      Json?          // Structure du projet
+  globalSummary String?        // Résumé global généré par IA
+  languages     Json?          // { "typescript": 15, "javascript": 8 }
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  fileAnalyses  FileAnalysis[] // Relation vers les analyses de fichiers
 
   @@index([userId])
+  @@index([status])
+}
+
+model FileAnalysis {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  path        String
+  language    String
+  summary     String?  // Généré par IA
+  exports     Json     // Array de strings
+  imports     Json     // Array de strings
+  functions   Json     // Array de FunctionInfo
+  classes     Json?    // Array de strings
+  complexity  Int?
+  linesOfCode Int
+  createdAt   DateTime @default(now())
+
+  @@index([projectId])
+  @@unique([projectId, path])
 }
 
 enum SourceType {

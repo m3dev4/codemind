@@ -102,6 +102,13 @@ class StorageService {
       throw new Error("Erreur lors de la récupération du fichier");
     }
   }
+
+  /**
+   * Alias pour getFile (pour plus de clarté)
+   */
+  async downloadFile(storageKey: string): Promise<Buffer> {
+    return this.getFile(storageKey);
+  }
 }
 
 export const storageService = new StorageService();

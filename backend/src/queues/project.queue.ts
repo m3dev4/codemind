@@ -45,6 +45,32 @@ export class ProjectQueue {
   }
 
   /**
+   * Ajouter un job de scanning de projet
+   */
+  async addScanJob(data: import("../types/jobs.ts").ScanProjectData) {
+    const job = await this.queue.add(JobType.SCAN_PROJECT, data, {
+      jobId: `scan-${data.projectId}`,
+    });
+
+    console.log(`✅ [Queue] Job ${JobType.SCAN_PROJECT} ajouté: ${job.id}`);
+
+    return job;
+  }
+
+  /**
+   * Ajouter un job d'analyse de projet
+   */
+  async addAnalyzeJob(data: import("../types/jobs.ts").AnalyzeProjectData) {
+    const job = await this.queue.add(JobType.ANALYZE_PROJECT, data, {
+      jobId: `analyze-${data.projectId}`,
+    });
+
+    console.log(`✅ [Queue] Job ${JobType.ANALYZE_PROJECT} ajouté: ${job.id}`);
+
+    return job;
+  }
+
+  /**
    * Récupérer le statut d'un job
    */
   async getJobStatus(jobId: string) {

@@ -156,6 +156,9 @@ class ProjectService {
     try {
       const project = await prisma.project.findUnique({
         where: { id: projectId },
+        include: {
+          fileAnalyses: true, // Inclure les analyses de fichiers
+        },
       });
 
       if (!project) {

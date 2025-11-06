@@ -167,10 +167,26 @@ exports.Prisma.ProjectScalarFieldEnum = {
   storageKey: 'storageKey',
   fileSize: 'fileSize',
   status: 'status',
-  analysisData: 'analysisData',
-  language: 'language',
+  manifest: 'manifest',
+  globalSummary: 'globalSummary',
+  languages: 'languages',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FileAnalysisScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  path: 'path',
+  language: 'language',
+  summary: 'summary',
+  exports: 'exports',
+  imports: 'imports',
+  functions: 'functions',
+  classes: 'classes',
+  complexity: 'complexity',
+  linesOfCode: 'linesOfCode',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -180,6 +196,10 @@ exports.Prisma.SortOrder = {
 
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -220,7 +240,8 @@ exports.ProjectStatus = exports.$Enums.ProjectStatus = {
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
-  Project: 'Project'
+  Project: 'Project',
+  FileAnalysis: 'FileAnalysis'
 };
 
 /**

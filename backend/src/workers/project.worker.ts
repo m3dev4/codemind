@@ -5,9 +5,13 @@ import {
   type ProcessZipProjectData,
   type ProcessGithubProjectData,
   type ProjectJobResult,
+  type ScanProjectData,
 } from "../types/jobs.ts";
 import { storageService } from "../services/storage.service.ts";
 import { githubService } from "../services/github.service.ts";
+import { scannerService } from "../services/scanner.service.ts";
+import { analyzerService } from "../services/analyzer.service.ts";
+import { projectQueue } from "../queues/project.queue.ts";
 import prisma from "../lib/prisma.ts";
 
 /**
@@ -23,7 +27,7 @@ export class ProjectWorker {
         console.log(`🔄 [Worker] Processing job ${job.id} (${job.name})`);
 
         try {
-          let result: ProjectJobResult;
+          let result: any;
 
           switch (job.name) {
             case JobType.PROCESS_ZIP_PROJECT:
@@ -32,6 +36,14 @@ export class ProjectWorker {
 
             case JobType.PROCESS_GITHUB_PROJECT:
               result = await this.processGithubProject(job.data as ProcessGithubProjectData, job);
+              break;
+
+            case JobType.SCAN_PROJECT:
+              result = await this.scanProject(job.data as ScanProjectData, job);
+              break;
+
+            case JobType.ANALYZE_PROJECT:
+              result = await this.analyzeProject(job.data as import("../types/jobs.ts").AnalyzeProjectData, job);
               break;
 
             default:
@@ -92,6 +104,14 @@ export class ProjectWorker {
 
       await job.updateProgress(100);
 
+      // Chaîner automatiquement le job de scanning
+      await projectQueue.addScanJob({
+        projectId,
+        storageKey: uploadResult.storageKey,
+      });
+
+      console.log(`🔗 [Worker] Scan job chained for project ${projectId}`);
+
       return {
         projectId,
         storageUrl: uploadResult.storageUrl,
@@ -149,6 +169,14 @@ export class ProjectWorker {
 
       await job.updateProgress(100);
 
+      // Chaîner automatiquement le job de scanning
+      await projectQueue.addScanJob({
+        projectId,
+        storageKey: uploadResult.storageKey,
+      });
+
+      console.log(`🔗 [Worker] Scan job chained for project ${projectId}`);
+
       return {
         projectId,
         storageUrl: uploadResult.storageUrl,
@@ -158,6 +186,130 @@ export class ProjectWorker {
       };
     } catch (error) {
       await this.updateProjectStatus(projectId, "FAILED");
+      throw error;
+    }
+  }
+
+  /**
+   * Scanner un projet
+   */
+  private async scanProject(
+    data: ScanProjectData,
+    job: Job,
+  ): Promise<import("../types/jobs.ts").ScanProjectResult> {
+    const { projectId, storageKey } = data;
+
+    try {
+      console.log(`🔍 [Worker] Scanning project ${projectId}...`);
+      await job.updateProgress(10);
+
+      // Scanner le projet
+      const manifest = await scannerService.scanProject(projectId, storageKey);
+
+      await job.updateProgress(80);
+
+      // Sauvegarder le manifest en DB
+      await prisma.project.update({
+        where: { id: projectId },
+        data: {
+          manifest: manifest as any,
+          languages: manifest.languages as any,
+        },
+      });
+
+      await job.updateProgress(100);
+
+      console.log(`✅ [Worker] Project ${projectId} scanned successfully`);
+
+      // Chaîner automatiquement le job d'analyse
+      await projectQueue.addAnalyzeJob({
+        projectId,
+        manifest,
+      });
+
+      console.log(`🔗 [Worker] Analyze job chained for project ${projectId}`);
+
+      return {
+        projectId,
+        manifest,
+      };
+    } catch (error) {
+      console.error(`❌ [Worker] Failed to scan project ${projectId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Analyser un projet
+   */
+  private async analyzeProject(
+    data: import("../types/jobs.ts").AnalyzeProjectData,
+    job: Job
+  ): Promise<import("../types/jobs.ts").AnalyzeProjectResult> {
+    const { projectId, manifest } = data;
+
+    try {
+      console.log(`🔬 [Worker] Analyzing project ${projectId}...`);
+      await job.updateProgress(10);
+      await this.updateProjectStatus(projectId, "ANALYZING");
+
+      // Récupérer le projet pour obtenir le storageKey
+      const project = await prisma.project.findUnique({
+        where: { id: projectId },
+      });
+
+      if (!project || !project.storageKey) {
+        throw new Error("Project or storage key not found");
+      }
+
+      // Analyser les fichiers
+      await job.updateProgress(30);
+      const analyses = await analyzerService.analyzeProject(
+        projectId,
+        project.storageKey,
+        manifest
+      );
+
+      await job.updateProgress(70);
+
+      // Sauvegarder les analyses en DB
+      for (const analysis of analyses) {
+        await prisma.fileAnalysis.create({
+          data: {
+            projectId,
+            path: analysis.path,
+            language: analysis.language,
+            summary: analysis.summary || null,
+            exports: analysis.exports,
+            imports: analysis.imports,
+            functions: analysis.functions,
+            classes: analysis.classes || [],
+            complexity: analysis.complexity || null,
+            linesOfCode: analysis.linesOfCode,
+          },
+        });
+      }
+
+      await job.updateProgress(90);
+
+      // Mettre à jour le statut du projet
+      await this.updateProjectStatus(projectId, "READY");
+
+      await job.updateProgress(100);
+
+      console.log(`✅ [Worker] Project ${projectId} analyzed successfully`);
+
+      // Nettoyer le dossier temporaire
+      await scannerService.cleanupProject(projectId);
+
+      return {
+        projectId,
+        totalFilesAnalyzed: analyses.length,
+        analyses,
+      };
+    } catch (error) {
+      await this.updateProjectStatus(projectId, "FAILED");
+      console.error(`❌ [Worker] Failed to analyze project ${projectId}:`, error);
       throw error;
     }
   }

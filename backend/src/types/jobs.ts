@@ -4,6 +4,8 @@
 export const JobType = {
   PROCESS_ZIP_PROJECT: "process-zip-project",
   PROCESS_GITHUB_PROJECT: "process-github-project",
+  SCAN_PROJECT: "scan-project",
+  ANALYZE_PROJECT: "analyze-project",
 } as const;
 
 export type JobType = (typeof JobType)[keyof typeof JobType];
@@ -42,3 +44,13 @@ export interface ProjectJobResult {
   fileSize: number;
   status: "UPLOADED" | "FAILED";
 }
+
+// Ré-exporter les types d'analyse
+export type {
+  ScanProjectData,
+  ScanProjectResult,
+  AnalyzeProjectData,
+  AnalyzeProjectResult,
+  ProjectManifest,
+  FileAnalysis,
+} from "./analysis.ts";
