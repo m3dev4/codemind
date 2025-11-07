@@ -133,10 +133,10 @@ class AnalyzerService {
       const analysis: FileAnalysis = {
         path,
         language: language || "unknown",
-        exports: this.extractExportsFromAST(rootNode, language),
-        imports: this.extractImportsFromAST(rootNode, language),
-        functions: this.extractFunctionsFromAST(rootNode, language),
-        classes: this.extractClassesFromAST(rootNode, language),
+        exports: this.extractExportsFromAST(rootNode, language || "unknown"),
+        imports: this.extractImportsFromAST(rootNode, language || "unknown"),
+        functions: this.extractFunctionsFromAST(rootNode, language || "unknown"),
+        classes: this.extractClassesFromAST(rootNode, language || "unknown"),
         linesOfCode: content.split("\n").length,
       };
 
@@ -158,10 +158,10 @@ class AnalyzerService {
     return {
       path,
       language: language || "unknown",
-      exports: this.extractExportsRegex(content, language),
-      imports: this.extractImportsRegex(content, language),
+      exports: this.extractExportsRegex(content, language || "unknown"),
+      imports: this.extractImportsRegex(content, language || "unknown"),
       functions: [],
-      classes: this.extractClassesRegex(content, language),
+      classes: this.extractClassesRegex(content, language || "unknown"),
       linesOfCode: content.split("\n").length,
     };
   }
@@ -356,7 +356,7 @@ class AnalyzerService {
       const importRegex = /import\s+.+\s+from\s+['"]([^'"]+)['"]/g;
       let match;
       while ((match = importRegex.exec(content)) !== null) {
-        imports.push(match[1]);
+        imports.push(match[1] || "");
       }
     }
 
@@ -370,7 +370,7 @@ class AnalyzerService {
       const exportRegex = /export\s+(?:const|let|var|function|class)\s+(\w+)/g;
       let match;
       while ((match = exportRegex.exec(content)) !== null) {
-        exports.push(match[1]);
+        exports.push(match[1] || "");
       }
     }
 
@@ -384,7 +384,7 @@ class AnalyzerService {
       const classRegex = /class\s+(\w+)/g;
       let match;
       while ((match = classRegex.exec(content)) !== null) {
-        classes.push(match[1]);
+        classes.push(match[1] || "");
       }
     }
 

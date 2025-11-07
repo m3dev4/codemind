@@ -42,7 +42,7 @@ class ProjectService {
           storageKey: uploadResult.storageKey,
           fileSize: BigInt(uploadResult.fileSize),
           status: "UPLOADED",
-          language: "",
+          languages: "",
         },
       });
 

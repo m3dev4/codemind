@@ -1,4 +1,4 @@
-import type { ProjectStatus, SourceType } from "../lib/generated/prisma/index.js";
+import type { Prisma, ProjectStatus, SourceType } from "../lib/generated/prisma/index.js";
 
 export interface CreateProjectFromZipDtp {
   name: string;
@@ -24,7 +24,7 @@ export interface ProjectResponse {
   status: ProjectStatus;
   storageKey?: string | null;
   storageUrl?: string | null;
-  language: string | null;
+  languages: Prisma.JsonValue;
   createdAt: Date;
   updatedAt: Date;
 }

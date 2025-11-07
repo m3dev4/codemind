@@ -282,7 +282,7 @@ export class ProjectWorker {
             summary: analysis.summary || null,
             exports: analysis.exports,
             imports: analysis.imports,
-            functions: analysis.functions,
+            functions: analysis.functions as any,
             classes: analysis.classes || [],
             complexity: analysis.complexity || null,
             linesOfCode: analysis.linesOfCode,

@@ -19,7 +19,7 @@ interface JwtPayload {
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtPayload;
+      user?: User;
     }
   }
 }
@@ -133,7 +133,10 @@ const isAuthenticated = asyncHandlerMiddleware(
           maxAge: expiryMs,
           path: "/",
         });
+        
       }
+      
+      
 
       next();
     } catch (error) {
@@ -162,8 +165,8 @@ const parseExpiryToMs = (expiry: string): number => {
     return isNaN(seconds) ? 7 * 24 * 60 * 60 * 1000 : seconds * 1000;
   }
 
-  const value = parseInt(match[1], 10);
-  const unit = match[2];
+  const value = parseInt(match[1] || "", 10);
+  const unit = match?.[2];
 
   switch (unit) {
     case "s":
@@ -181,20 +184,20 @@ const parseExpiryToMs = (expiry: string): number => {
 
 const isAdmin = asyncHandlerMiddleware(async (req: Request, res: Response, next: NextFunction) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
     const user = await prisma.user.findUnique({
-      where: { id: req.user?.userId },
+      where: { id: req.user.userId },
       select: { role: true },
     });
 
     if (!user) {
       return res.status(404).json({
         message: "User not found",
-      });
-    }
-
-    if (!req.user) {
-      return res.status(401).json({
-        message: "Unauthorized",
       });
     }
 
