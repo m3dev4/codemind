@@ -11,6 +11,8 @@ import { connectRedis } from "./config/cache/redis.ts";
 import routes from "./routes/index.ts";
 import { testEmailConnection } from "./services/email.service.ts";
 import "./config/Oauth2/passport.ts"; // Initialiser passport
+import { projectWorker } from "./workers/project.worker.ts"; // Worker BullMQ
+
 // Note: Arcjet middlewares sont appliqués au niveau des routes individuelles
 // pour un contrôle plus granulaire de la protection
 
@@ -34,25 +36,19 @@ app.use(
 );
 
 // Logging
-app.use(morgan(config.NODE_ENV === "development" ? "dev" : "combined"));
+app.use(morgan("combined"));
+
+// Middleware de debug global
+app.use((req: Request, res: Response, next: any) => {
+  console.log(`🔍 [${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
 // Initialiser Passport
 app.use(passport.initialize());
 
 // Connexion Redis
 await connectRedis();
-
-// Test connexion email (non bloquant)
-testEmailConnection().then((connected) => {
-  if (connected) {
-    console.log("✅ [Email Service] Connexion Resend configurée");
-  } else {
-    console.warn("⚠️  [Email Service] Resend non configuré ou clé invalide");
-  }
-});
-
-// Routes API
-app.use("/api", routes);
 
 // Route racine
 app.get("/", (req: Request, res: Response) => {
@@ -64,8 +60,23 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-// Gestion des routes non trouvées
-app.use(/(.*)/, (req: Request, res: Response) => {
+// Route de test
+app.get("/test-api", (req: Request, res: Response) => {
+  console.log("✅ Route /test-api appelée");
+  res.json({
+    success: true,
+    message: "Ce route marche",
+  });
+});
+
+// Routes API (IMPORTANT: doit être avant le catch-all)
+console.log("📍 Mounting /api routes");
+app.use("/api", routes);
+console.log("✅ /api routes mounted");
+
+// Gestion des routes non trouvées (DOIT être en DERNIER)
+app.use((req: Request, res: Response) => {
+  console.log("❌ 404 - Route non trouvée:", req.method, req.originalUrl);
   res.status(404).json({
     success: false,
     message: "Route non trouvée",

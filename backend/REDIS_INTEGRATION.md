@@ -13,6 +13,7 @@ Redis est maintenant **entièrement intégré** dans le système d'authentificat
 Service centralisé pour toutes les opérations Redis liées à l'authentification.
 
 **Fonctionnalités :**
+
 - Token Blacklist (révocation JWT)
 - Cache des sessions
 - Cache des utilisateurs
@@ -26,12 +27,14 @@ Service centralisé pour toutes les opérations Redis liées à l'authentificati
 ### 1. **Token Blacklist (Révocation JWT)**
 
 #### Avant
+
 ```typescript
 // Pas de révocation possible
 // Les tokens restaient valides jusqu'à expiration
 ```
 
 #### Après
+
 ```typescript
 // Lors du logout, le token est blacklisté dans Redis
 await blacklistToken(jti, expiresIn);
@@ -44,6 +47,7 @@ if (isBlacklisted) {
 ```
 
 **Avantages :**
+
 - ✅ Déconnexion immédiate et sécurisée
 - ✅ Tokens révoqués même avant expiration
 - ✅ TTL automatique (pas besoin de nettoyage manuel)
@@ -53,14 +57,16 @@ if (isBlacklisted) {
 ### 2. **Cache Utilisateur**
 
 #### Avant
+
 ```typescript
 // Requête DB à chaque vérification de token
 const user = await prisma.user.findUnique({
-  where: { id: decoded.userId }
+  where: { id: decoded.userId },
 });
 ```
 
 #### Après
+
 ```typescript
 // Vérification depuis Redis d'abord (beaucoup plus rapide)
 let user = await getUserFromCache(decoded.userId);
@@ -73,6 +79,7 @@ if (!user) {
 ```
 
 **Avantages :**
+
 - ✅ Réduction drastique des requêtes DB
 - ✅ Temps de réponse ~10-100x plus rapide
 - ✅ Cache automatique avec TTL de 1 heure
@@ -82,12 +89,14 @@ if (!user) {
 ### 3. **Cache des Sessions**
 
 #### Avant
+
 ```typescript
 // Création de session uniquement en DB
 const session = await prisma.session.create({ ... });
 ```
 
 #### Après
+
 ```typescript
 // Création en DB + cache Redis
 const session = await prisma.session.create({ ... });
@@ -95,6 +104,7 @@ await cacheSession(session.id, sessionData); // TTL: 7 jours
 ```
 
 **Avantages :**
+
 - ✅ Récupération ultra-rapide des sessions actives
 - ✅ Validation de session sans DB
 - ✅ Suppression automatique lors du logout
@@ -104,6 +114,7 @@ await cacheSession(session.id, sessionData); // TTL: 7 jours
 ### 4. **Code de Vérification Email (Redis)**
 
 #### Avant
+
 ```typescript
 // Code stocké en DB avec emailVerificationToken
 const user = await prisma.user.create({
@@ -116,6 +127,7 @@ const user = await prisma.user.create({
 ```
 
 #### Après
+
 ```typescript
 // Code stocké dans Redis (temporaire, 15 min)
 await storeVerificationCode(email, code); // TTL: 15 min
@@ -125,6 +137,7 @@ const isValid = await verifyVerificationCode(email, code);
 ```
 
 **Avantages :**
+
 - ✅ Pas de pollution de la table `users`
 - ✅ Suppression automatique après 15 minutes
 - ✅ Suppression automatique après utilisation (usage unique)
@@ -134,6 +147,7 @@ const isValid = await verifyVerificationCode(email, code);
 ### 5. **Token de Reset Password (Redis)**
 
 #### Avant
+
 ```typescript
 // Token stocké en DB
 await prisma.user.update({
@@ -141,11 +155,12 @@ await prisma.user.update({
   data: {
     passwordResetToken: token,
     passwordResetExpires: expiry,
-  }
+  },
 });
 ```
 
 #### Après
+
 ```typescript
 // Token stocké dans Redis (temporaire, 1 heure)
 await storeResetToken(email, token); // TTL: 1 heure
@@ -155,6 +170,7 @@ const email = await getEmailFromResetToken(token);
 ```
 
 **Avantages :**
+
 - ✅ Tokens temporaires sans toucher à la DB
 - ✅ Expiration automatique
 - ✅ Pas besoin de nettoyer les tokens expirés
@@ -185,6 +201,7 @@ reset:{resetToken}                    -> "email@example.com" (TTL: 1 heure)
 ## 🔄 Flux d'Authentification avec Redis
 
 ### 1. **Inscription (Register)**
+
 ```
 1. Générer code de vérification (6 chiffres)
 2. Stocker dans Redis → storeVerificationCode(email, code)
@@ -193,6 +210,7 @@ reset:{resetToken}                    -> "email@example.com" (TTL: 1 heure)
 ```
 
 ### 2. **Vérification Email**
+
 ```
 1. Récupérer code depuis Redis → verifyVerificationCode(email, code)
 2. Si valide, marquer email comme vérifié
@@ -200,6 +218,7 @@ reset:{resetToken}                    -> "email@example.com" (TTL: 1 heure)
 ```
 
 ### 3. **Login**
+
 ```
 1. Vérifier credentials
 2. Créer session en DB
@@ -210,6 +229,7 @@ reset:{resetToken}                    -> "email@example.com" (TTL: 1 heure)
 ```
 
 ### 4. **Middleware d'Authentification**
+
 ```
 1. Extraire token JWT
 2. Vérifier si blacklisté → isTokenBlacklisted(jti)
@@ -219,6 +239,7 @@ reset:{resetToken}                    -> "email@example.com" (TTL: 1 heure)
 ```
 
 ### 5. **Logout**
+
 ```
 1. Blacklister le token → blacklistToken(jti, expiresIn)
 2. Supprimer session de DB
@@ -228,6 +249,7 @@ reset:{resetToken}                    -> "email@example.com" (TTL: 1 heure)
 ```
 
 ### 6. **Profil Utilisateur**
+
 ```
 1. Récupérer depuis Redis → getUserFromCache(userId)
 2. Si trouvé, retourner immédiatement
@@ -238,12 +260,12 @@ reset:{resetToken}                    -> "email@example.com" (TTL: 1 heure)
 
 ## 📈 Améliorations de Performance
 
-| Opération | Avant (DB seule) | Après (Redis) | Amélioration |
-|-----------|------------------|---------------|--------------|
-| Vérification token | ~50-100ms | ~1-5ms | **10-100x** |
-| Récupération profil | ~30-80ms | ~1-3ms | **30-80x** |
-| Validation session | ~40-90ms | ~1-4ms | **40-90x** |
-| Logout (révocation) | Impossible | ~2-5ms | **Nouveau** |
+| Opération           | Avant (DB seule) | Après (Redis) | Amélioration |
+| ------------------- | ---------------- | ------------- | ------------ |
+| Vérification token  | ~50-100ms        | ~1-5ms        | **10-100x**  |
+| Récupération profil | ~30-80ms         | ~1-3ms        | **30-80x**   |
+| Validation session  | ~40-90ms         | ~1-4ms        | **40-90x**   |
+| Logout (révocation) | Impossible       | ~2-5ms        | **Nouveau**  |
 
 ---
 
@@ -260,6 +282,7 @@ REDIS_PORT=6379
 ```
 
 ### Connexion Redis
+
 ```typescript
 // Déjà configuré dans src/config/cache/redis.ts
 const client = createClient({
@@ -277,8 +300,9 @@ const client = createClient({
 ## 🛠️ Utilisation
 
 ### Blacklister un Token
+
 ```typescript
-import { blacklistToken } from './services/redis.auth.service';
+import { blacklistToken } from "./services/redis.auth.service";
 
 // Lors du logout
 const tokenExpiresIn = tokenExp - Math.floor(Date.now() / 1000);
@@ -286,8 +310,9 @@ await blacklistToken(jti, tokenExpiresIn);
 ```
 
 ### Cacher un Utilisateur
+
 ```typescript
-import { cacheUser } from './services/redis.auth.service';
+import { cacheUser } from "./services/redis.auth.service";
 
 await cacheUser(userId, {
   id: user.id,
@@ -298,8 +323,9 @@ await cacheUser(userId, {
 ```
 
 ### Vérifier un Code de Vérification
+
 ```typescript
-import { verifyVerificationCode } from './services/redis.auth.service';
+import { verifyVerificationCode } from "./services/redis.auth.service";
 
 const isValid = await verifyVerificationCode(email, code);
 if (!isValid) {
@@ -312,7 +338,7 @@ if (!isValid) {
 ## 🧪 Test de la Connexion Redis
 
 ```typescript
-import { pingRedis, getCacheStats } from './services/redis.auth.service';
+import { pingRedis, getCacheStats } from "./services/redis.auth.service";
 
 // Vérifier la connexion
 const isConnected = await pingRedis();
@@ -334,6 +360,7 @@ console.log("Cache stats:", stats);
 ## 🚨 Nettoyage et Maintenance
 
 ### Redis s'occupe automatiquement de :
+
 - ✅ Expiration des tokens blacklistés (TTL automatique)
 - ✅ Suppression des sessions expirées (TTL: 7 jours)
 - ✅ Suppression du cache utilisateur (TTL: 1 heure)
@@ -347,9 +374,11 @@ console.log("Cache stats:", stats);
 ## 📝 Fichiers Modifiés
 
 ### Créés
+
 - ✅ `src/services/redis.auth.service.ts` - Service Redis complet
 
 ### Modifiés
+
 - ✅ `src/middlewares/authMiddleware.ts` - Blacklist + cache utilisateur
 - ✅ `src/services/auth.service.ts` - Intégration complète Redis
 - ✅ `src/controllers/auth.controller.ts` - Logout avec blacklist
@@ -359,12 +388,15 @@ console.log("Cache stats:", stats);
 ## ⚠️ Notes Importantes
 
 ### 1. **Redis est requis**
+
 L'application ne démarrera pas si Redis n'est pas disponible. Assurez-vous que Redis est en cours d'exécution.
 
 ### 2. **Erreurs TypeScript mineures**
+
 Quelques erreurs de type liées à `req.user` peuvent apparaître. Elles ne sont pas bloquantes et peuvent être résolues en ajustant les types globaux Express.
 
 ### 3. **Prisma Schema**
+
 Les champs `emailVerificationToken`, `emailVerificationExpires`, `passwordResetToken`, et `passwordResetExpires` sont toujours présents dans le schéma Prisma mais **ne sont plus utilisés**. Vous pouvez les supprimer lors de la prochaine migration.
 
 ---
@@ -372,24 +404,29 @@ Les champs `emailVerificationToken`, `emailVerificationExpires`, `passwordResetT
 ## 🎯 Prochaines Étapes (Optionnel)
 
 ### 1. **Redis Sentinel / Cluster**
+
 Pour la haute disponibilité en production :
+
 ```typescript
 const client = createClient({
   sentinels: [
-    { host: 'sentinel1', port: 26379 },
-    { host: 'sentinel2', port: 26379 },
+    { host: "sentinel1", port: 26379 },
+    { host: "sentinel2", port: 26379 },
   ],
-  name: 'mymaster',
+  name: "mymaster",
 });
 ```
 
 ### 2. **Monitoring Redis**
+
 Utiliser RedisInsight ou un dashboard pour monitorer :
+
 - Nombre de clés
 - Utilisation mémoire
 - Hit rate du cache
 
 ### 3. **Rate Limiting avec Redis**
+
 Implémenter un rate limiting avancé basé sur Redis pour compléter Arcjet.
 
 ---

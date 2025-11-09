@@ -35,12 +35,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.17.1
- * Query Engine version: 272a37d34178c2894197e17273bf937f25acdeac
+ * Prisma Client JS version: 6.18.0
+ * Query Engine version: 34b5a692b7bd79939a9a2c3ef97d816e749cda2f
  */
 Prisma.prismaVersion = {
-  client: "6.17.1",
-  engine: "272a37d34178c2894197e17273bf937f25acdeac"
+  client: "6.18.0",
+  engine: "34b5a692b7bd79939a9a2c3ef97d816e749cda2f"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -127,9 +127,52 @@ exports.Prisma.SessionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ProjectScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  description: 'description',
+  sourceType: 'sourceType',
+  githubUrl: 'githubUrl',
+  githubBranch: 'githubBranch',
+  storageUrl: 'storageUrl',
+  storageKey: 'storageKey',
+  fileSize: 'fileSize',
+  status: 'status',
+  manifest: 'manifest',
+  globalSummary: 'globalSummary',
+  languages: 'languages',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FileAnalysisScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  path: 'path',
+  language: 'language',
+  summary: 'summary',
+  exports: 'exports',
+  imports: 'imports',
+  functions: 'functions',
+  classes: 'classes',
+  complexity: 'complexity',
+  linesOfCode: 'linesOfCode',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -141,14 +184,36 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
 exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN',
   USER: 'USER'
 };
 
+exports.SourceType = exports.$Enums.SourceType = {
+  GITHUB: 'GITHUB',
+  ZIP: 'ZIP'
+};
+
+exports.ProjectStatus = exports.$Enums.ProjectStatus = {
+  PENDING: 'PENDING',
+  UPLOADING: 'UPLOADING',
+  UPLOADED: 'UPLOADED',
+  ANALYZING: 'ANALYZING',
+  READY: 'READY',
+  FAILED: 'FAILED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
-  Session: 'Session'
+  Session: 'Session',
+  Project: 'Project',
+  FileAnalysis: 'FileAnalysis'
 };
 /**
  * Create the Client
@@ -183,12 +248,13 @@ const config = {
     "schemaEnvPath": "../../../../.env"
   },
   "relativePath": "../../../../prisma",
-  "clientVersion": "6.17.1",
-  "engineVersion": "272a37d34178c2894197e17273bf937f25acdeac",
+  "clientVersion": "6.18.0",
+  "engineVersion": "34b5a692b7bd79939a9a2c3ef97d816e749cda2f",
   "datasourceNames": [
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -197,13 +263,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/lib/generated/prisma\"\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel User {\n  id        String @id @default(cuid())\n  email     String @unique\n  firstName String\n  lastName  String\n  username  String @unique\n  password  String\n\n  emailVerified            Boolean @default(false)\n  emailVerificationToken   String?\n  emailVerificationExpires String?\n\n  passwordResetToken   String?\n  passwordResetExpires String?\n\n  picture String?\n\n  googleId String? @unique\n  githubId String? @unique\n\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n  role      Role      @default(USER)\n  sessions  Session[]\n}\n\nmodel Session {\n  id     String @id @default(cuid())\n  userId String\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  userAgent String\n  location  String\n  expiresAt DateTime\n  device    String\n  ip        String\n  os        String\n  browser   String\n  platform  String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum Role {\n  ADMIN\n  USER\n}\n",
-  "inlineSchemaHash": "d13b491a647d09e4f10605cd02dfdde336fc39634db2feb88c9a2adb1fb44e8c",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/lib/generated/prisma\"\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel User {\n  id        String @id @default(cuid())\n  email     String @unique\n  firstName String\n  lastName  String\n  username  String @unique\n  password  String\n\n  emailVerified            Boolean @default(false)\n  emailVerificationToken   String?\n  emailVerificationExpires String?\n\n  passwordResetToken   String?\n  passwordResetExpires String?\n\n  picture String?\n\n  googleId String? @unique\n  githubId String? @unique\n\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n  role      Role      @default(USER)\n  sessions  Session[]\n  projects  Project[]\n}\n\nmodel Session {\n  id     String @id @default(cuid())\n  userId String\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  userAgent String\n  location  String\n  expiresAt DateTime\n  device    String\n  ip        String\n  os        String\n  browser   String\n  platform  String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum Role {\n  ADMIN\n  USER\n}\n\nmodel Project {\n  id            String         @id @default(cuid())\n  userId        String\n  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)\n  name          String\n  description   String?\n  sourceType    SourceType\n  githubUrl     String?\n  githubBranch  String?\n  storageUrl    String?\n  storageKey    String?\n  fileSize      BigInt?\n  status        ProjectStatus  @default(PENDING)\n  manifest      Json? // Structure du projet\n  globalSummary String? // Résumé global généré par IA\n  languages     Json? // { \"typescript\": 15, \"javascript\": 8 }\n  createdAt     DateTime       @default(now())\n  updatedAt     DateTime       @updatedAt\n  fileAnalyses  FileAnalysis[] // Relation vers les analyses de fichiers\n\n  @@index([userId])\n  @@index([status])\n}\n\nmodel FileAnalysis {\n  id          String   @id @default(cuid())\n  projectId   String\n  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)\n  path        String\n  language    String\n  summary     String? // Généré par IA\n  exports     Json // Array de strings\n  imports     Json // Array de strings\n  functions   Json // Array de FunctionInfo\n  classes     Json? // Array de strings\n  complexity  Int?\n  linesOfCode Int\n  createdAt   DateTime @default(now())\n\n  @@unique([projectId, path])\n  @@index([projectId])\n}\n\nenum SourceType {\n  GITHUB\n  ZIP\n}\n\nenum ProjectStatus {\n  PENDING\n  UPLOADING\n  UPLOADED\n  ANALYZING\n  READY\n  FAILED\n}\n",
+  "inlineSchemaHash": "01d053eef5d79cc1e395ad00f03154d62604bfaba2fa1a54e3360935a28ea5e1",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"emailVerificationToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerificationExpires\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"passwordResetToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"passwordResetExpires\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"picture\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"googleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"githubId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"sessions\",\"kind\":\"object\",\"type\":\"Session\",\"relationName\":\"SessionToUser\"}],\"dbName\":null},\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SessionToUser\"},{\"name\":\"userAgent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"location\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"device\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ip\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"os\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"browser\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"platform\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"emailVerificationToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerificationExpires\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"passwordResetToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"passwordResetExpires\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"picture\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"googleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"githubId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"sessions\",\"kind\":\"object\",\"type\":\"Session\",\"relationName\":\"SessionToUser\"},{\"name\":\"projects\",\"kind\":\"object\",\"type\":\"Project\",\"relationName\":\"ProjectToUser\"}],\"dbName\":null},\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SessionToUser\"},{\"name\":\"userAgent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"location\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"device\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ip\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"os\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"browser\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"platform\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Project\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ProjectToUser\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceType\",\"kind\":\"enum\",\"type\":\"SourceType\"},{\"name\":\"githubUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"githubBranch\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"storageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"storageKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fileSize\",\"kind\":\"scalar\",\"type\":\"BigInt\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"ProjectStatus\"},{\"name\":\"manifest\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"globalSummary\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"languages\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"fileAnalyses\",\"kind\":\"object\",\"type\":\"FileAnalysis\",\"relationName\":\"FileAnalysisToProject\"}],\"dbName\":null},\"FileAnalysis\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"projectId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"project\",\"kind\":\"object\",\"type\":\"Project\",\"relationName\":\"FileAnalysisToProject\"},{\"name\":\"path\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"summary\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"exports\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"imports\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"functions\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"classes\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"complexity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"linesOfCode\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

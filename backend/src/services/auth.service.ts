@@ -130,7 +130,7 @@ export const verifyEmail = async (email: string, code: string) => {
 
   // Vérifier le code depuis Redis (auto-suppression après vérification)
   const isValid = await verifyVerificationCode(email, code);
-  
+
   if (!isValid) {
     throw new Error("Code de vérification invalide ou expiré");
   }
@@ -254,7 +254,7 @@ export const logoutUser = async (
   userId: string,
   sessionId?: string,
   tokenJti?: string,
-  tokenExpiresIn?: number
+  tokenExpiresIn?: number,
 ) => {
   // Blacklister le token JWT si fourni
   if (tokenJti && tokenExpiresIn) {

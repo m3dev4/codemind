@@ -1,4 +1,3 @@
-// tsconfig.json
 {
   "compilerOptions": {
     /* Modern JavaScript & Browser Compatibility: */
@@ -11,7 +10,7 @@
     "sourceMap": true, // Enables source maps for easier debugging
 
     /* Module Resolution Strategy: */
-    "moduleResolution": "NodeNext", // Resolves modules using Node’s ESM strategy
+    "moduleResolution": "NodeNext", // Resolves modules using Node's ESM strategy
     "moduleDetection": "force", // Forces TypeScript to treat files as modules
 
     "allowJs": true, // Allows JavaScript files to be compiled
@@ -28,16 +27,19 @@
     "noImplicitAny": true, // Prevents the use of `any` type unless explicitly defined
     "skipLibCheck": true, // Skips type-checking of declaration files for faster compilation
     "resolveJsonModule": true, // Allows importing JSON files as modules
-    "declaration": true, // Generates `.d.ts` files for type definitions
+    "declaration": false, // MODIFIÉ: Désactive la génération de .d.ts pour éviter l'erreur Prisma
     "allowSyntheticDefaultImports": true, // Allows default imports for CommonJS modules
     "allowImportingTsExtensions": true, // Allows importing `.ts` files with their extensions
+    "noEmit": true,
     "verbatimModuleSyntax": true, // Keeps the `import`/`export` syntax as-is without transformation
 
     // Include modern ECMAScript (ES2022) and DOM APIs for frontend
-    "lib": ["ES2022", "DOM"] // Include ES2022 features and DOM APIs for frontend development
-    // Uncomment this for backend code without DOM APIs
-    /* "lib": ["ES2022"] */
+    "lib": ["ES2022"] // MODIFIÉ: Retiré DOM car c'est du backend
   },
   "include": ["src"], // Includes the `src` directory in the project
-  "exclude": ["node_modules", "dist"] // Excludes `node_modules` and `dist` directories from the project
+  "exclude": [
+    "node_modules", 
+    "dist",
+    "src/lib/generated/**/*" // Exclut les fichiers générés par Prisma
+  ]
 }

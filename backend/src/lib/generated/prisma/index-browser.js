@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.17.1
- * Query Engine version: 272a37d34178c2894197e17273bf937f25acdeac
+ * Prisma Client JS version: 6.18.0
+ * Query Engine version: 34b5a692b7bd79939a9a2c3ef97d816e749cda2f
  */
 Prisma.prismaVersion = {
-  client: "6.17.1",
-  engine: "272a37d34178c2894197e17273bf937f25acdeac"
+  client: "6.18.0",
+  engine: "34b5a692b7bd79939a9a2c3ef97d816e749cda2f"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -155,9 +155,52 @@ exports.Prisma.SessionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ProjectScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  description: 'description',
+  sourceType: 'sourceType',
+  githubUrl: 'githubUrl',
+  githubBranch: 'githubBranch',
+  storageUrl: 'storageUrl',
+  storageKey: 'storageKey',
+  fileSize: 'fileSize',
+  status: 'status',
+  manifest: 'manifest',
+  globalSummary: 'globalSummary',
+  languages: 'languages',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FileAnalysisScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  path: 'path',
+  language: 'language',
+  summary: 'summary',
+  exports: 'exports',
+  imports: 'imports',
+  functions: 'functions',
+  classes: 'classes',
+  complexity: 'complexity',
+  linesOfCode: 'linesOfCode',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -169,14 +212,36 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
 exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN',
   USER: 'USER'
 };
 
+exports.SourceType = exports.$Enums.SourceType = {
+  GITHUB: 'GITHUB',
+  ZIP: 'ZIP'
+};
+
+exports.ProjectStatus = exports.$Enums.ProjectStatus = {
+  PENDING: 'PENDING',
+  UPLOADING: 'UPLOADING',
+  UPLOADED: 'UPLOADED',
+  ANALYZING: 'ANALYZING',
+  READY: 'READY',
+  FAILED: 'FAILED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
-  Session: 'Session'
+  Session: 'Session',
+  Project: 'Project',
+  FileAnalysis: 'FileAnalysis'
 };
 
 /**

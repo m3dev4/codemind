@@ -176,11 +176,11 @@ export const storeVerificationCode = async (email: string, code: string): Promis
 export const verifyVerificationCode = async (email: string, code: string): Promise<boolean> => {
   const key = `${PREFIXES.VERIFICATION_CODE}${email}`;
   const storedCode = await redisClient.get(key);
-  
+
   if (!storedCode || storedCode !== code) {
     return false;
   }
-  
+
   // Supprimer le code après vérification réussie (usage unique)
   await redisClient.del(key);
   return true;
@@ -236,10 +236,7 @@ export const deleteResetToken = async (token: string): Promise<void> => {
  * Utile lors de la suppression d'un compte
  */
 export const clearAllUserData = async (userId: string): Promise<void> => {
-  await Promise.all([
-    deleteUserFromCache(userId),
-    deleteAllUserSessions(userId),
-  ]);
+  await Promise.all([deleteUserFromCache(userId), deleteAllUserSessions(userId)]);
 };
 
 /**
