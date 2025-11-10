@@ -2,7 +2,7 @@ export type ProjectStatus = "PENDING" | "UPLOADING" | "UPLOADED" | "ANALYZING" |
 
 export type SourceType = "GITHUB" | "ZIP";
 
-export interface Prject {
+export interface Project {
   id: string;
   userId: string;
   name: string;
@@ -24,7 +24,6 @@ export interface Prject {
 export interface createProjectFromZipInput {
   name: string;
   description?: string;
-  zipFile: File;
 }
 
 export interface createProjectFromGithubInput {
@@ -32,4 +31,12 @@ export interface createProjectFromGithubInput {
   description?: string;
   githubUrl: string | null;
   githubBranch?: string | null;
+}
+
+
+export interface ProjectJobResponse {
+  projectId: string;
+  jobId: string;
+  status: "PENDING";
+  message: string;
 }
