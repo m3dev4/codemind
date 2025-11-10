@@ -146,10 +146,16 @@ class ProjectController {
 
       const projects = await projectService.getUserProjects(userId);
 
+      // Convertir les BigInt en string pour la sérialisation JSON
+      const serializedProjects = projects.map((project) => ({
+        ...project,
+        fileSize: project.fileSize?.toString() || null,
+      }));
+
       res.status(200).json({
         success: true,
         message: "Projects retrieved successfully",
-        data: projects,
+        data: serializedProjects,
       });
     } catch (error: any) {
       console.error("Error retrieving projects:", error);

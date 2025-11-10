@@ -133,10 +133,7 @@ const isAuthenticated = asyncHandlerMiddleware(
           maxAge: expiryMs,
           path: "/",
         });
-        
       }
-      
-      
 
       next();
     } catch (error) {

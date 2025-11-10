@@ -38,7 +38,7 @@
   },
   "include": ["src"], // Includes the `src` directory in the project
   "exclude": [
-    "node_modules", 
+    "node_modules",
     "dist",
     "src/lib/generated/**/*" // Exclut les fichiers générés par Prisma
   ]

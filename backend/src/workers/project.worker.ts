@@ -43,7 +43,10 @@ export class ProjectWorker {
               break;
 
             case JobType.ANALYZE_PROJECT:
-              result = await this.analyzeProject(job.data as import("../types/jobs.ts").AnalyzeProjectData, job);
+              result = await this.analyzeProject(
+                job.data as import("../types/jobs.ts").AnalyzeProjectData,
+                job,
+              );
               break;
 
             default:
@@ -244,7 +247,7 @@ export class ProjectWorker {
    */
   private async analyzeProject(
     data: import("../types/jobs.ts").AnalyzeProjectData,
-    job: Job
+    job: Job,
   ): Promise<import("../types/jobs.ts").AnalyzeProjectResult> {
     const { projectId, manifest } = data;
 
@@ -267,7 +270,7 @@ export class ProjectWorker {
       const analyses = await analyzerService.analyzeProject(
         projectId,
         project.storageKey,
-        manifest
+        manifest,
       );
 
       await job.updateProgress(70);

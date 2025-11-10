@@ -31,15 +31,15 @@
     "globals": "^16.5.0",
     "jiti": "^2.6.1",
     "prettier": "3.6.2",
-    "prisma": "^6.18.0",
+    "prisma": "^6.19.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.3",
-    "wrangler": "^4.45.4"
+    "typescript-eslint": "^8.46.4",
+    "wrangler": "^4.46.0"
   },
   "dependencies": {
     "@arcjet/inspect": "1.0.0-beta.13",
     "@arcjet/node": "1.0.0-beta.13",
-    "@aws-sdk/client-s3": "^3.922.0",
+    "@aws-sdk/client-s3": "^3.927.0",
     "@prisma/client": "6.17.1",
     "@types/adm-zip": "^0.5.7",
     "@types/bcrypt": "^6.0.0",
@@ -68,7 +68,7 @@
     "passport-google-oauth20": "^2.0.0",
     "ratelimit": "^0.0.4",
     "redis": "^5.9.0",
-    "resend": "^6.4.1",
+    "resend": "^6.4.2",
     "simple-git": "^3.30.0",
     "tree-sitter": "^0.25.0",
     "tree-sitter-javascript": "^0.25.0",

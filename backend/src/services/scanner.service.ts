@@ -17,10 +17,7 @@ class ScannerService {
   /**
    * Télécharge le ZIP depuis R2, l'extrait et génère le manifest
    */
-  async scanProject(
-    projectId: string,
-    storageKey: string
-  ): Promise<ProjectManifest> {
+  async scanProject(projectId: string, storageKey: string): Promise<ProjectManifest> {
     const tempDir = path.join(os.tmpdir(), "codemind-scan", projectId);
 
     try {
@@ -64,7 +61,7 @@ class ScannerService {
       };
 
       console.log(
-        `✅ [Scanner] Scan complete: ${manifest.totalFiles} files, ${Object.keys(languages).length} languages`
+        `✅ [Scanner] Scan complete: ${manifest.totalFiles} files, ${Object.keys(languages).length} languages`,
       );
 
       return manifest;
@@ -85,7 +82,7 @@ class ScannerService {
     baseDir: string,
     relativePath: string,
     structure: FileStructureItem[],
-    languages: Record<string, number>
+    languages: Record<string, number>,
   ): Promise<void> {
     const fullPath = path.join(baseDir, relativePath);
     const entries = await fs.readdir(fullPath, { withFileTypes: true });
@@ -106,12 +103,7 @@ class ScannerService {
         });
 
         // Scanner récursivement
-        await this.scanDirectory(
-          baseDir,
-          entryRelativePath,
-          structure,
-          languages
-        );
+        await this.scanDirectory(baseDir, entryRelativePath, structure, languages);
       } else if (entry.isFile()) {
         // Récupérer les infos du fichier
         const stats = await fs.stat(path.join(baseDir, entryRelativePath));
@@ -148,9 +140,7 @@ class ScannerService {
 
       // Pattern avec wildcard (*.ext)
       if (pattern.includes("*")) {
-        const regex = new RegExp(
-          "^" + pattern.replace(/\*/g, ".*").replace(/\./g, "\\.") + "$"
-        );
+        const regex = new RegExp("^" + pattern.replace(/\*/g, ".*").replace(/\./g, "\\.") + "$");
         if (regex.test(path.basename(relativePath))) {
           return true;
         }
@@ -166,17 +156,13 @@ class ScannerService {
   async readFileFromProject(
     projectId: string,
     storageKey: string,
-    filePath: string
+    filePath: string,
   ): Promise<string> {
     const tempDir = path.join(os.tmpdir(), "codemind-analyze", projectId);
 
     try {
       // Télécharger et extraire si nécessaire
-      const extractedDir = await this.ensureExtracted(
-        projectId,
-        storageKey,
-        tempDir
-      );
+      const extractedDir = await this.ensureExtracted(projectId, storageKey, tempDir);
 
       // Lire le fichier
       const fullPath = path.join(extractedDir, filePath);
@@ -195,7 +181,7 @@ class ScannerService {
   private async ensureExtracted(
     projectId: string,
     storageKey: string,
-    tempDir: string
+    tempDir: string,
   ): Promise<string> {
     // Vérifier si déjà extrait
     try {

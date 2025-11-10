@@ -7,11 +7,14 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { User2, ChevronUp } from "lucide-react";
+import { User2, ChevronUp, ChevronDown, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { codemindLogo } from "@/public/imgs";
 import { navigations, navigationsFooter } from "@/constants/navigation";
@@ -25,16 +28,23 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
+import { useState } from "react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const pathname = usePathname();
   const { user } = useAuthState();
+  const [openMenus, setOpenMenus] = useState<Record<number, boolean>>({});
 
   if (!user) {
     return null;
   }
+
+  const toggleMenu = (id: number) => {
+    setOpenMenus((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   return (
     <Sidebar
@@ -71,24 +81,83 @@ export function AppSidebar() {
       <SidebarContent className="py-4 px-2">
         <SidebarGroup>
           <SidebarMenu>
-            {navigations.map((nav) => (
-              <SidebarMenuItem key={nav.id}>
-                <SidebarMenuButton
-                  asChild
-                  tooltip={nav.name}
-                  isActive={pathname === nav.href}
-                  className={cn(
-                    "text-neutral-300 hover:bg-neutral-900 hover:text-white transition-colors",
-                    pathname === nav.href && "bg-neutral-900 text-white font-semibold",
-                  )}
-                >
-                  <Link href={nav.href}>
-                    <span className="text-lg">{nav.icon}</span>
-                    <span className="font-sora">{nav.name}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            {navigations.map((nav) => {
+              const hasSubItems = nav.subItems && nav.subItems.length > 0;
+              const isNavActive =
+                pathname === nav.href || nav.subItems?.some((sub) => pathname === sub.href);
+
+              if (hasSubItems && !isCollapsed) {
+                return (
+                  <Collapsible
+                    key={nav.id}
+                    open={openMenus[nav.id] || isNavActive}
+                    onOpenChange={() => toggleMenu(nav.id)}
+                  >
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          tooltip={nav.name}
+                          isActive={isNavActive}
+                          className={cn(
+                            "text-neutral-300 hover:bg-neutral-900 hover:text-white transition-colors",
+                            isNavActive && "bg-neutral-900 text-white font-semibold",
+                          )}
+                        >
+                          <span className="text-lg">{nav.icon}</span>
+                          <span className="font-sora">{nav.name}</span>
+                          {openMenus[nav.id] || isNavActive ? (
+                            <ChevronDown className="ml-auto h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="ml-auto h-4 w-4" />
+                          )}
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {nav.subItems?.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.id}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={pathname === subItem.href}
+                                className={cn(
+                                  "text-neutral-400 hover:bg-neutral-900 hover:text-white transition-colors pl-8",
+                                  pathname === subItem.href &&
+                                    "bg-neutral-900 text-white font-semibold",
+                                )}
+                              >
+                                <Link href={subItem.href}>
+                                  <span className="text-sm">{subItem.icon}</span>
+                                  <span className="font-sora text-sm">{subItem.name}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                );
+              }
+
+              return (
+                <SidebarMenuItem key={nav.id}>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={nav.name}
+                    isActive={pathname === nav.href}
+                    className={cn(
+                      "text-neutral-300 hover:bg-neutral-900 hover:text-white transition-colors",
+                      pathname === nav.href && "bg-neutral-900 text-white font-semibold",
+                    )}
+                  >
+                    <Link href={nav.href}>
+                      <span className="text-lg">{nav.icon}</span>
+                      <span className="font-sora">{nav.name}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

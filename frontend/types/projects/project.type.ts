@@ -15,7 +15,7 @@ export interface Project {
   fileSize?: string | null;
   status: ProjectStatus;
   manifest?: any;
-  globalSummury?: string | null;
+  globalSummary?: string | null;
   languages?: Record<string, number> | null;
   createdAt: Date;
   updatedAt: Date;
@@ -33,10 +33,20 @@ export interface createProjectFromGithubInput {
   githubBranch?: string | null;
 }
 
-
 export interface ProjectJobResponse {
   projectId: string;
   jobId: string;
   status: "PENDING";
   message: string;
+}
+
+export interface JobStatus {
+  id: string;
+  state: "waiting" | "active" | "completed" | "failed" | "delayed";
+  progress?: number;
+  data?: any;
+  returnvalue?: any;
+  failedReason?: string;
+  processedOn?: number;
+  finishedOn?: number;
 }

@@ -150,12 +150,12 @@ export const LANGUAGE_EXTENSIONS: Record<string, string[]> = {
  */
 export function detectLanguage(filePath: string): string | null {
   const ext = filePath.substring(filePath.lastIndexOf("."));
-  
+
   for (const [language, extensions] of Object.entries(LANGUAGE_EXTENSIONS)) {
     if (extensions.includes(ext)) {
       return language;
     }
   }
-  
+
   return null;
 }

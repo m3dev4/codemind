@@ -1,8 +1,4 @@
-import type {
-  ProjectManifest,
-  FileAnalysis,
-  FunctionInfo,
-} from "../types/analysis.ts";
+import type { ProjectManifest, FileAnalysis, FunctionInfo } from "../types/analysis.ts";
 import { scannerService } from "./scanner.service.ts";
 
 // Tree-sitter imports optionnels
@@ -70,7 +66,7 @@ class AnalyzerService {
   async analyzeProject(
     projectId: string,
     storageKey: string,
-    manifest: ProjectManifest
+    manifest: ProjectManifest,
   ): Promise<FileAnalysis[]> {
     const analyses: FileAnalysis[] = [];
 
@@ -78,35 +74,27 @@ class AnalyzerService {
 
     // Filtrer uniquement les fichiers de code analysables
     const codeFiles = manifest.structure.filter(
-      (item) => item.type === "file" && this.isAnalyzableFile(item.path)
+      (item) => item.type === "file" && this.isAnalyzableFile(item.path),
     );
 
     let analyzed = 0;
     for (const file of codeFiles) {
       try {
-        const content = await scannerService.readFileFromProject(
-          projectId,
-          storageKey,
-          file.path
-        );
+        const content = await scannerService.readFileFromProject(projectId, storageKey, file.path);
 
         const analysis = await this.analyzeFile(file.path, content);
         analyses.push(analysis);
 
         analyzed++;
         if (analyzed % 10 === 0) {
-          console.log(
-            `📊 [Analyzer] Progress: ${analyzed}/${codeFiles.length} files`
-          );
+          console.log(`📊 [Analyzer] Progress: ${analyzed}/${codeFiles.length} files`);
         }
       } catch (error) {
         console.error(`⚠️ [Analyzer] Failed to analyze ${file.path}:`, error);
       }
     }
 
-    console.log(
-      `✅ [Analyzer] Analysis complete: ${analyses.length} files analyzed`
-    );
+    console.log(`✅ [Analyzer] Analysis complete: ${analyses.length} files analyzed`);
 
     return analyses;
   }
@@ -114,10 +102,7 @@ class AnalyzerService {
   /**
    * Analyse un fichier individuel
    */
-  private async analyzeFile(
-    path: string,
-    content: string
-  ): Promise<FileAnalysis> {
+  private async analyzeFile(path: string, content: string): Promise<FileAnalysis> {
     const language = this.detectLanguage(path);
     const parser = language ? this.parsers.get(language) : null;
 
@@ -150,11 +135,7 @@ class AnalyzerService {
   /**
    * Analyse basique par regex (fallback)
    */
-  private analyzeFileBasic(
-    path: string,
-    content: string,
-    language: string | null
-  ): FileAnalysis {
+  private analyzeFileBasic(path: string, content: string, language: string | null): FileAnalysis {
     return {
       path,
       language: language || "unknown",
@@ -220,10 +201,7 @@ class AnalyzerService {
   /**
    * Extrait les fonctions depuis l'AST
    */
-  private extractFunctionsFromAST(
-    node: any,
-    language: string
-  ): FunctionInfo[] {
+  private extractFunctionsFromAST(node: any, language: string): FunctionInfo[] {
     const functions: FunctionInfo[] = [];
 
     if (language === "typescript" || language === "javascript") {
@@ -256,10 +234,7 @@ class AnalyzerService {
   /**
    * Extrait les classes depuis l'AST
    */
-  private extractClassesFromAST(
-    node: any,
-    language: string
-  ): string[] {
+  private extractClassesFromAST(node: any, language: string): string[] {
     const classes: string[] = [];
 
     if (language === "typescript" || language === "javascript") {
@@ -288,10 +263,7 @@ class AnalyzerService {
   /**
    * Traverse récursivement l'AST
    */
-  private traverseAST(
-    node: any,
-    callback: (node: any) => void
-  ) {
+  private traverseAST(node: any, callback: (node: any) => void) {
     callback(node);
     for (const child of node.children) {
       this.traverseAST(child, callback);

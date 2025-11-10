@@ -1,4 +1,19 @@
-export const navigations = [
+export interface NavigationSubItem {
+  id: number;
+  name: string;
+  href: string;
+  icon: string;
+}
+
+export interface NavigationItem {
+  id: number;
+  name: string;
+  href: string;
+  icon: string;
+  subItems?: NavigationSubItem[];
+}
+
+export const navigations: NavigationItem[] = [
   {
     id: 1,
     name: "Dashboard",
@@ -8,8 +23,22 @@ export const navigations = [
   {
     id: 2,
     name: "Projets",
-    href: "/projets",
+    href: "/projets/lists",
     icon: " 📁",
+    subItems: [
+      {
+        id: 21,
+        name: "Liste des projets",
+        href: "/projets/lists",
+        icon: "📋",
+      },
+      {
+        id: 22,
+        name: "Créer un projet",
+        href: "/projets",
+        icon: "➕",
+      },
+    ],
   },
   {
     id: 3,
