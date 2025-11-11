@@ -2,6 +2,21 @@ export type ProjectStatus = "PENDING" | "UPLOADING" | "UPLOADED" | "ANALYZING" |
 
 export type SourceType = "GITHUB" | "ZIP";
 
+export interface FileAnalysis {
+  id: string;
+  projectId: string;
+  path: string;
+  language: string;
+  summary?: string | null;
+  exports: string[];
+  imports: string[];
+  functions: any[];
+  classes?: string[] | null;
+  complexity?: number | null;
+  linesOfCode: number;
+  createdAt: Date;
+}
+
 export interface Project {
   id: string;
   userId: string;
@@ -17,6 +32,7 @@ export interface Project {
   manifest?: any;
   globalSummary?: string | null;
   languages?: Record<string, number> | null;
+  fileAnalyses?: FileAnalysis[];
   createdAt: Date;
   updatedAt: Date;
 }
