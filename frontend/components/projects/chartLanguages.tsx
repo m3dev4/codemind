@@ -2,9 +2,9 @@ import { Code2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { LanguageIcon } from "./LanguageIcon";
+import { Item } from "@radix-ui/react-dropdown-menu";
 
-
-export default function chartLanguages({ languages }) {
+export default function chartLanguages({ languages }: { languages: Record<string, number> }) {
   const data = Object.entries(languages || {}).map(([key, value]) => ({
     name: key,
     value: value,
@@ -40,8 +40,12 @@ export default function chartLanguages({ languages }) {
                   dataKey="value"
                 >
                   {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`}
-                     fill={LanguageIcon({ language: entry.name, size: 0, showColor: true }).props.style.color}
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={
+                        LanguageIcon({ language: entry.name, size: 0, showColor: true }).props.style
+                          .color
+                      }
                     />
                   ))}
                 </Pie>
@@ -54,17 +58,16 @@ export default function chartLanguages({ languages }) {
               </PieChart>
             </ResponsiveContainer>
 
-            <div className="mt-4 space-y-2">
-              {data.map((item, index) => (
-                <div key={item.name} className="flex items-center justify-between text-sm">
+            <div className="mt-4 space-y-4">
+              {data.map((entry, index) => (
+                <div className="flex justify-between items-start text-xs" key={index}>
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full">
-                      <span className="text-stone-300">{item.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-stone-300">{item.value}</span>
-                      <span className="text-stone-300">{item.percentage}%</span>
-                    </div>
+                    <LanguageIcon language={entry.name} size={16} />
+                    <span className="font-sora text-stone-300">{entry.name}</span>
+                  </div>
+                  <div>
+                    <span className="font-sora text-white font-medium">{entry.value} fichiers</span>
+                    <span className="ml-2 text-stone-500">({entry.percentage}%)</span>
                   </div>
                 </div>
               ))}

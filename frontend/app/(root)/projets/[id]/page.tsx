@@ -1,5 +1,6 @@
 "use client";
 import ChartLanguages from "@/components/projects/chartLanguages";
+import { FileDistribution } from "@/components/projects/fileDistribution";
 import StatusBadge from "@/components/projects/statusBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -205,14 +206,22 @@ const ProjectDetailPage = () => {
                 <span className="text-stone-500 text-xs font-inter mt-1">MB</span>
               </p>
               <p>
-               créé {formatDistanceToNow(new Date(project?.createdAt), { addSuffix: true, locale: fr })}
+                créé{" "}
+                {formatDistanceToNow(new Date(project?.createdAt), { addSuffix: true, locale: fr })}
               </p>
             </CardContent>
           </Card>
         </div>
 
         {/* Illustrer les sur un diagramme */}
-        <ChartLanguages languages={project?.languages || []} />
+        <div className="grid grid-cols-5 grid-rows-5 gap-4 flex-1">
+          <div className=" col-span-2 row-span-5">
+            <ChartLanguages languages={project?.languages || []} />
+          </div>
+          <div className="col-span-2 row-span-5 col-start-4">
+            <FileDistribution structure={project?.manifest?.structure || []} />
+          </div>
+        </div>
       </div>
     </main>
   );
