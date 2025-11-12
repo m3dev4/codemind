@@ -15,3 +15,5 @@ const StatusBadge = ({ status }: { status: ProjectStatus }) => {
     </>
   );
 };
+
+export default StatusBadge;
