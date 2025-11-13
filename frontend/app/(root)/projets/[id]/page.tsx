@@ -1,7 +1,9 @@
 "use client";
 import ChartLanguages from "@/components/projects/chartLanguages";
+import { CodeMetric } from "@/components/projects/codeMetric";
 import { FileDistribution } from "@/components/projects/fileDistribution";
 import StatusBadge from "@/components/projects/statusBadge";
+import { TopFiles } from "@/components/projects/topFiles";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -139,7 +141,6 @@ const ProjectDetailPage = () => {
             <StatusBadge status={project?.status} />
             {project?.githubUrl && (
               <Badge
-                variant="ouline"
                 className="bg-stone-800/30 border-stone-700/30 text-stone-300 font-inter"
               >
                 <GitBranch className="w-3 h-3 mr-1" />
@@ -222,6 +223,18 @@ const ProjectDetailPage = () => {
             <FileDistribution structure={project?.manifest?.structure || []} />
           </div>
         </div>
+
+        {/* Les métriques &  */}
+       <div className="mt-8">
+         <div className="grid grid-cols-5 grid-rows-5 gap-4 flex-1">
+          <div className="col-span-2 row-span-5">
+            <CodeMetric />
+          </div>
+          <div className="col-span-2 row-span-5 col-start-4">
+            <TopFiles />
+          </div>
+        </div>
+       </div>
       </div>
     </main>
   );
